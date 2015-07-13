@@ -42,4 +42,13 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-.class
+*.class
+*.settings
+*.project
+*.classpath
+target
+# Package Files #
+*.jar
+*.war
+*.ear
+/target
