@@ -33,19 +33,20 @@ public class DetectedObjectController {
     @RequestMapping(value = "/new", method = RequestMethod.GET)
     public @ResponseBody DetectedObject addDetectedObject(HttpServletResponse httpServletResponse, @RequestParam ("direction") String direction, @RequestParam ("objectType") String objectType, @RequestParam ("date") Timestamp date){
     	httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
-    	if(userSession.getUser() == null){
-    		httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    		return null; 
-    	}
-    	DetectedObject detectedObject = new DetectedObject(direction, objectType, date);
     	try {
-			if(this.detectedObjectServices.addDetectedObject(detectedObject)){
+    		this.userVerification(httpServletResponse);
+    		DetectedObject detectedObject = new DetectedObject(direction, objectType, date);
+    		if(this.detectedObjectServices.addDetectedObject(detectedObject)){
 				return detectedObject;
 			}else{
 				return null;
 			}
+		} catch (IllegalAccessException e){
+			logger.info("No ha iniciado sesión!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.info("Error encontrado: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return null;
 		}
@@ -55,61 +56,92 @@ public class DetectedObjectController {
     public @ResponseBody List<DetectedObject> getDetectedObjects(HttpServletResponse httpServletResponse){
     	httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
     	try {
-    		logger.info(this.detectedObjectServices.getDetectedObjectList().get(0).getDate().getHours());
+    		this.userVerification(httpServletResponse);
 			return this.detectedObjectServices.getDetectedObjectList();
+		} catch (IllegalAccessException e){
+			logger.info("No ha iniciado sesión!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.info("Error encontrado: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
 		}
-    	return null;
     }
     
     @RequestMapping(value = "/requestDetectedObjectByDate", method = RequestMethod.GET)
     public @ResponseBody List<DetectedObject> getDetectedObjectsByDate(HttpServletResponse httpServletResponse, @RequestParam ("date") Timestamp date){
     	httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
-    	try {
+		try {
+			this.userVerification(httpServletResponse);
 			return this.detectedObjectServices.findByDate(date);
+    	} catch (IllegalAccessException e){
+			logger.info("No ha iniciado sesión!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.info("Error encontrado: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
 		}
-    	return null;
     }
     
     @RequestMapping(value = "/requestDetectedObjectByMonth", method = RequestMethod.GET)
     public @ResponseBody List<DetectedObject> getDetectedObjectsByMonth(HttpServletResponse httpServletResponse, @RequestParam("month") int month){
     	httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
     	try {
+    		this.userVerification(httpServletResponse);
 			return this.detectedObjectServices.findByMonth(month);
+    	} catch (IllegalAccessException e){
+			logger.info("No ha iniciado sesión!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.info("Error encontrado: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
 		}
-    	return null;
     }
     
     @RequestMapping(value = "/requestDetectedObjectByYear", method = RequestMethod.GET)
     public @ResponseBody List<DetectedObject> getDetectedObjectsByYear(HttpServletResponse httpServletResponse, @RequestParam("year") int year){
     	httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
     	try {
+    		this.userVerification(httpServletResponse);
 			return this.detectedObjectServices.findByYear(year);
+    	} catch (IllegalAccessException e){
+			logger.info("No ha iniciado sesión!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.info("Error encontrado: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
 		}
-    	return null;
     }
 
     @RequestMapping(value = "/requestDetectedObjectByDatesBetween", method = RequestMethod.GET)
     public @ResponseBody List<DetectedObject> getDetectedObjectsByDatesBetween(HttpServletResponse httpServletResponse, @RequestParam("startDate") Timestamp startDate, @RequestParam("endDate") Timestamp endDate){
     	httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
     	try {
+    		this.userVerification(httpServletResponse);
 			return this.detectedObjectServices.findByDatesBetween(startDate, endDate);
+    	} catch (IllegalAccessException e){
+			logger.info("No ha iniciado sesión!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
 		} catch (Exception e) {
-			e.printStackTrace();
-    		httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			logger.info("Error encontrado: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
 		}
-    	return null;
+    }
+    
+    private void userVerification(HttpServletResponse httpServletResponse) throws IllegalAccessException{ 
+	    if(userSession.getUser() == null){
+			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			throw new IllegalAccessException();
+		}
     }
 
 }

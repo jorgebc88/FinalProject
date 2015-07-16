@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Created by Marco on 18/04/2015.
  */
 @Component
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS, value = "session")
+@Scope(proxyMode = ScopedProxyMode.INTERFACES, value = "session")
 public class UserSession implements Serializable {
     /**
 	 * 

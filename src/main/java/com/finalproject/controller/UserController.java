@@ -63,6 +63,10 @@ public class UserController {
     public @ResponseBody User login (HttpServletResponse httpServletResponse, @RequestParam("userName") String userName, @RequestParam("password") String password){
     	User user = null;
     	this.addCorsHeader(httpServletResponse);
+    	if(userSession.getUser() != null){
+    		logger.info("Usuario: "+userSession.getUser().getUserName()+" esta logueado!");
+    		return user;
+    	}
     	try{
     		user = this.userServices.login(userName, password);	
     	} catch (Exception e) {
@@ -91,8 +95,12 @@ public class UserController {
     public @ResponseBody User logout (HttpServletResponse httpServletResponse) throws Exception{
     	httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
     	User user = null;
+    	if(userSession.getUser() != null){
+    		logger.info("Usuario " + userSession.getUser().getUserName() + " deslogueado correctamente!");
+    	}else{
+    		logger.info("No existia Usuario Logueado!");
+    	}
        	userSession.setUser(user);
-       	logger.info("Usuario deslogueado correctamente!");
         return userSession.getUser();
     }
     
