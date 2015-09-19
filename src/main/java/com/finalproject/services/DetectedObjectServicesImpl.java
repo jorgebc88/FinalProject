@@ -35,7 +35,7 @@ public class DetectedObjectServicesImpl implements DetectedObjectServices {
 	}
 
 	@Override
-	public List<DetectedObject> findByDate(Timestamp date) throws Exception {
+	public List<DetectedObject> findByDate(Date date) throws Exception {
 		return this.detectedObjectDao.findByDate(date);
 	}
 
@@ -50,7 +50,7 @@ public class DetectedObjectServicesImpl implements DetectedObjectServices {
 	}
 
 	@Override
-	public List<DetectedObject> findByDatesBetween(Timestamp startDate, Timestamp endDate)
+	public List<DetectedObject> findByDatesBetween(Date startDate, Date endDate)
 			throws Exception {
 		return this.detectedObjectDao.findByDatesBetween(startDate, endDate);
 	}

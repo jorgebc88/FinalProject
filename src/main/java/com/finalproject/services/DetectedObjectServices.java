@@ -12,9 +12,9 @@ public interface DetectedObjectServices {
 	public List<DetectedObject> getDetectedObjectList() throws Exception;
 	public boolean deleteDetectedObject(long id) throws Exception;
 	
-	public List<DetectedObject> findByDate(Timestamp date) throws Exception;
+	public List<DetectedObject> findByDate(Date date) throws Exception;
 	public List<DetectedObject> findByMonth(int Month) throws Exception;
 	public List<DetectedObject> findByYear(int Year) throws Exception;
-	public List<DetectedObject> findByDatesBetween(Timestamp startDate, Timestamp endDate) throws Exception;
+	public List<DetectedObject> findByDatesBetween(Date startDate, Date endDate) throws Exception;
 
 }

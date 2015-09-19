@@ -55,7 +55,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 
 	@SuppressWarnings({"unchecked" })
 	@Override
-	public List<DetectedObject> findByDate(Timestamp date) throws Exception {
+	public List<DetectedObject> findByDate(Date date) throws Exception {
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
 		List<DetectedObject> detectedObjectList = session.createQuery("FROM DetectedObject WHERE date = :date")
@@ -94,7 +94,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DetectedObject> findByDatesBetween(Timestamp startDate, Timestamp endDate) throws Exception {
+	public List<DetectedObject> findByDatesBetween(Date startDate, Date endDate) throws Exception {
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
 		List<DetectedObject> detectedObjectList = session.createQuery("FROM DetectedObject WHERE date BETWEEN :startDate AND :endDate ")
