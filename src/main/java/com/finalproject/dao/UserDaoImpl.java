@@ -48,11 +48,10 @@ public class UserDaoImpl implements UserDao{
 	@Override
 	public User getUserById(long id) throws Exception {
 		session = sessionFactory.openSession();
-		User user = (User) session.load(User.class,
-				new Long(id));
-		tx = session.getTransaction();
 		session.beginTransaction();
-		tx.commit();
+		User user = (User) session.get(User.class, id);
+		session.flush();
+		session.close();
 		return user;
 	}
 
@@ -72,11 +71,10 @@ public class UserDaoImpl implements UserDao{
 	public boolean deleteUser(long id)
 			throws Exception {
 		session = sessionFactory.openSession();
-		Object o = session.load(User.class, id);
-		tx = session.getTransaction();
-		session.beginTransaction();
+		User o = (User) session.load(User.class, id);
 		session.delete(o);
-		tx.commit();
+		session.flush();
+		session.close();
 		return true;
 	}
 
