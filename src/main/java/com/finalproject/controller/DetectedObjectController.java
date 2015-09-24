@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,10 @@ import com.finalproject.model.DetectedObject;
 import com.finalproject.model.UserSession;
 import com.finalproject.services.DetectedObjectServices;
 import com.finalproject.util.FinalProjectUtil;
+
+import org.glassfish.jersey.media.sse.EventOutput;
+import org.glassfish.jersey.media.sse.OutboundEvent;
+import org.glassfish.jersey.media.sse.SseFeature;
 
 @Controller
 @RequestMapping("/detectedObject")
@@ -140,5 +145,46 @@ public class DetectedObjectController {
 			return null;
 		}
     }
+    
+    @RequestMapping(value = "/serverSentEvents", method = RequestMethod.GET, produces = SseFeature.SERVER_SENT_EVENTS)
+    public @ResponseBody EventOutput getServerSentEvents() {
+        final EventOutput eventOutput = new EventOutput();
+        logger.info("Mensaje recibido en serverSentEvents");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    for (int i = 0; i < 10; i++) {
+                        Thread.sleep(1000);
+                        final OutboundEvent.Builder eventBuilder
+                        = new OutboundEvent.Builder();
+                        eventBuilder.name("message-to-client");
+                        eventBuilder.mediaType(MediaType.TEXT_PLAIN_TYPE);
+                        eventBuilder.data(String.class,
+                            "Hello world " + i + "!");
+                        final OutboundEvent event = eventBuilder.build();
+                        logger.info(event.getData().toString());
+                        eventOutput.write(event);
+                        logger.info("Mensaje n° " + i + " enviado!");
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(
+                        "Error when writing the event.", e);
+                } catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} finally {
+                    try {
+                        eventOutput.close();
+                    } catch (IOException ioClose) {
+                        throw new RuntimeException(
+                            "Error when closing the event output.", ioClose);
+                    }
+                }
+            }
+        }).start();
+        return eventOutput;
+    }
+    
     
 }
