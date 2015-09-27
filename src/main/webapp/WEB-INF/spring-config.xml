@@ -25,7 +25,7 @@
 		<property name="dataSource" ref="dataSource" />
 		<property name="annotatedClasses">
 			<list>
-				<value>com.finalproject.model.User</value>				
+				<value>com.finalproject.model.User</value>
 				<value>com.finalproject.model.DetectedObject</value>
 			</list>
 		</property>
@@ -49,8 +49,10 @@
 	<bean id="DetectedObjectDao" class="com.finalproject.dao.DetectedObjectDaoImpl"></bean>
 	<bean id="userServices" class="com.finalproject.services.UserServicesImpl"></bean>
 	<bean id="detectedObjectServices" class="com.finalproject.services.DetectedObjectServicesImpl"></bean>
-	<bean id="userSession" class="com.finalproject.model.UserSession" scope="session">
-        <aop:scoped-proxy/>
-    </bean>
-    
+	<bean id="userSession" class="com.finalproject.model.UserSession"
+		scope="session">
+		<aop:scoped-proxy />
+	</bean>
+	<bean id="detectedObjectCache" class="com.finalproject.model.DetectedObjectCache"
+		scope="singleton"></bean>
 </beans>

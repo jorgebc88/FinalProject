@@ -12,21 +12,21 @@ import java.io.Serializable;
 @Component
 @Scope(proxyMode = ScopedProxyMode.INTERFACES, value = "session")
 public class UserSession implements Serializable {
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2419616269450372897L;
 	public User user;
 
-    public UserSession() {
-    }
+	public UserSession() {
+	}
 
-    public User getUser() {
-        return this.user;
-    }
+	public User getUser() {
+		return this.user;
+	}
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+	public void setUser(User user) {
+		this.user = user;
+	}
 
 }
