@@ -7,7 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finalproject.model.DetectedObject;
-import com.finalproject.model.DetectedObjectCache;
+import com.finalproject.model.DetectedObjectNorthCache;
+import com.finalproject.model.DetectedObjectSouthCache;
 import com.finalproject.model.UserSession;
 
 public class FinalProjectUtil {
@@ -45,9 +46,14 @@ public class FinalProjectUtil {
 		}
 	}
 	
-	public static void modifyDetectedObjectCache(DetectedObject detectedObject, DetectedObjectCache detectedObjectCache) {
+	public static void modifyDetectedObjectCache(DetectedObject detectedObject, DetectedObjectSouthCache detectedObjectSouthCache, DetectedObjectNorthCache detectedObjectNorthCache) {
 		String type = detectedObject.getObjectType();
-		detectedObjectCache.incrementValue(type);
+		String direction = detectedObject.getDirection();
+		if(direction.equals("South")){
+			detectedObjectSouthCache.incrementValue(type);
+		}else{
+			detectedObjectNorthCache.incrementValue(type);
+		}
 	}
 
 	

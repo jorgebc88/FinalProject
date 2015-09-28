@@ -1,5 +1,6 @@
 package com.finalproject.controller;
 
+import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.finalproject.model.DetectedObject;
-import com.finalproject.model.DetectedObjectCache;
+import com.finalproject.model.DetectedObjectNorthCache;
+import com.finalproject.model.DetectedObjectSouthCache;
 import com.finalproject.model.UserSession;
 import com.finalproject.services.DetectedObjectServices;
 import com.finalproject.util.FinalProjectUtil;
@@ -30,7 +32,10 @@ public class DetectedObjectController {
 	@Autowired
 	UserSession userSession;
 	@Autowired
-	DetectedObjectCache detectedObjectCache;
+	DetectedObjectSouthCache detectedObjectSouthCache;
+	@Autowired
+	DetectedObjectNorthCache detectedObjectNorthCache;
+
 
 	static final Logger logger = Logger.getLogger(DetectedObjectController.class);
 
@@ -45,7 +50,7 @@ public class DetectedObjectController {
 			// userSession);
 			DetectedObject detectedObject = (DetectedObject) FinalProjectUtil.fromJson(jsonEntrada,
 					DetectedObject.class);
-			FinalProjectUtil.modifyDetectedObjectCache(detectedObject, detectedObjectCache);
+			FinalProjectUtil.modifyDetectedObjectCache(detectedObject, detectedObjectSouthCache, detectedObjectNorthCache);
 			this.detectedObjectServices.addDetectedObject(detectedObject);
 			String jsonSalida = FinalProjectUtil.toJson(detectedObject);
 
@@ -158,9 +163,14 @@ public class DetectedObjectController {
 	@RequestMapping(value = "/serverSentEvents", method = RequestMethod.GET, produces = SseFeature.SERVER_SENT_EVENTS)
 	public @ResponseBody String getServerSentEvents(HttpServletResponse httpServletResponse) {
 
-		logger.info(FinalProjectUtil.toJson(detectedObjectCache));
+		logger.info("South: " + FinalProjectUtil.toJson(detectedObjectSouthCache));
+		logger.info("North: " + FinalProjectUtil.toJson(detectedObjectNorthCache));
+		StringBuilder data = new StringBuilder("data: {\"detectedObject\":[");
+		data.append(FinalProjectUtil.toJson(detectedObjectSouthCache)).append(",");
+		data.append(FinalProjectUtil.toJson(detectedObjectNorthCache)).append("]}\n\n");
+		logger.info("Json: " + data.toString());
 
-		return "data: " + FinalProjectUtil.toJson(detectedObjectCache) + "\n\n";
+		return data.toString();
 	}
 
 }

@@ -53,6 +53,9 @@
 		scope="session">
 		<aop:scoped-proxy />
 	</bean>
-	<bean id="detectedObjectCache" class="com.finalproject.model.DetectedObjectCache"
+	<bean id="detectedObjectSouthCache" class="com.finalproject.model.DetectedObjectSouthCache"
 		scope="singleton"></bean>
+	<bean id="detectedObjectNorthCache" class="com.finalproject.model.DetectedObjectNorthCache"
+		scope="singleton"></bean>
+
 </beans>
