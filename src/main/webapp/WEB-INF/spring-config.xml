@@ -57,5 +57,6 @@
 		scope="singleton"></bean>
 	<bean id="detectedObjectNorthCache" class="com.finalproject.model.DetectedObjectNorthCache"
 		scope="singleton"></bean>
+		
 
 </beans>

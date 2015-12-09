@@ -16,8 +16,10 @@ public class FinalProjectUtil {
 	public static void addCorsHeader(HttpServletResponse response) {
 		// TODO: externalize the Allow-Origin
 		response.addHeader("Access-Control-Allow-Origin", "*");
-		response.addHeader("Access-Control-Max-Age", "1728000");
-	}
+        response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
+        response.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept");
+        response.addHeader("Access-Control-Max-Age", "1728000");
+    }
 
 	public static void userVerification(HttpServletResponse httpServletResponse, UserSession userSession)
 			throws IllegalAccessException {

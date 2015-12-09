@@ -14,14 +14,11 @@ public class DataDaoImpl implements DataDao {
 	@Autowired
 	SessionFactory sessionFactory;
 
-	Session session = null;
-	Transaction tx = null;
-
 	@Override
 	public boolean addEntity(Employee employee) throws Exception {
 
-		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
+		Session session = sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
 		session.save(employee);
 		tx.commit();
 		session.close();
@@ -31,10 +28,10 @@ public class DataDaoImpl implements DataDao {
 
 	@Override
 	public Employee getEntityById(long id) throws Exception {
-		session = sessionFactory.openSession();
+		Session session = sessionFactory.openSession();
 		Employee employee = (Employee) session.load(Employee.class,
 				new Long(id));
-		tx = session.getTransaction();
+		Transaction tx = session.getTransaction();
 		session.beginTransaction();
 		tx.commit();
 		return employee;
@@ -43,8 +40,8 @@ public class DataDaoImpl implements DataDao {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Employee> getEntityList() throws Exception {
-		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
+		Session session = sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
 		List<Employee> employeeList = session.createCriteria(Employee.class)
 				.list();
 		tx.commit();
@@ -55,9 +52,9 @@ public class DataDaoImpl implements DataDao {
 	@Override
 	public boolean deleteEntity(long id)
 			throws Exception {
-		session = sessionFactory.openSession();
+		Session session = sessionFactory.openSession();
 		Object o = session.load(Employee.class, id);
-		tx = session.getTransaction();
+		Transaction tx = session.getTransaction();
 		session.beginTransaction();
 		session.delete(o);
 		tx.commit();

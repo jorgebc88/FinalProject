@@ -45,6 +45,7 @@ public class DetectedObjectController {
 	@RequestMapping(value = "/DetectedObject", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public void insert(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			@RequestBody String jsonEntrada) {
+		FinalProjectUtil.addCorsHeader(httpServletResponse);
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
@@ -68,7 +69,7 @@ public class DetectedObjectController {
 
 	@RequestMapping(value = "/requestDetectedObject", method = RequestMethod.GET)
 	public @ResponseBody List<DetectedObject> getDetectedObjects(HttpServletResponse httpServletResponse) {
-		httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
+		FinalProjectUtil.addCorsHeader(httpServletResponse);
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
@@ -87,7 +88,7 @@ public class DetectedObjectController {
 	@RequestMapping(value = "/requestDetectedObjectByDate", method = RequestMethod.GET)
 	public @ResponseBody List<DetectedObject> getDetectedObjectsByDate(HttpServletResponse httpServletResponse,
 			@RequestParam("date") Date date) {
-		httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
+		FinalProjectUtil.addCorsHeader(httpServletResponse);
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
@@ -106,7 +107,7 @@ public class DetectedObjectController {
 	@RequestMapping(value = "/requestDetectedObjectByMonth", method = RequestMethod.GET)
 	public @ResponseBody List<DetectedObject> getDetectedObjectsByMonth(HttpServletResponse httpServletResponse,
 			@RequestParam("month") int month) {
-		httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
+		FinalProjectUtil.addCorsHeader(httpServletResponse);
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
@@ -125,7 +126,7 @@ public class DetectedObjectController {
 	@RequestMapping(value = "/requestDetectedObjectByYear", method = RequestMethod.GET)
 	public @ResponseBody List<DetectedObject> getDetectedObjectsByYear(HttpServletResponse httpServletResponse,
 			@RequestParam("year") int year) {
-		httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
+		FinalProjectUtil.addCorsHeader(httpServletResponse);
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
@@ -144,7 +145,7 @@ public class DetectedObjectController {
 	@RequestMapping(value = "/requestDetectedObjectByDatesBetween", method = RequestMethod.GET)
 	public @ResponseBody List<DetectedObject> getDetectedObjectsByDatesBetween(HttpServletResponse httpServletResponse,
 			@RequestParam("startDate") Date startDate, @RequestParam("endDate") Date endDate) {
-		httpServletResponse.addHeader("Access-Control-Allow-Origin", "*");
+		FinalProjectUtil.addCorsHeader(httpServletResponse);
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
@@ -165,7 +166,8 @@ public class DetectedObjectController {
 
 		logger.info("South: " + FinalProjectUtil.toJson(detectedObjectSouthCache));
 		logger.info("North: " + FinalProjectUtil.toJson(detectedObjectNorthCache));
-		StringBuilder data = new StringBuilder("data: {\"detectedObject\":[");
+		StringBuilder data = new StringBuilder("retry: 500\n");
+		data.append("data: {\"detectedObject\":[");
 		data.append(FinalProjectUtil.toJson(detectedObjectSouthCache)).append(",");
 		data.append(FinalProjectUtil.toJson(detectedObjectNorthCache)).append("]}\n\n");
 		logger.info("Json: " + data.toString());

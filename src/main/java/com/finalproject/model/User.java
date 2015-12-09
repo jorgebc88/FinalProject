@@ -23,19 +23,33 @@ public class User implements Serializable{
 
     @Column(name = "password")
     private String password;
-
-    public Long getUserId() {
-        return userId;
-    }
+    
+    @Column(name = "level")
+    private int level;
+    
+    
     public User(){
     	super();
     }
-    public User(String userName, String password) {
+    
+    public User(String userName, String password, int level) {
         super();
         this.userName = userName;
         this.password = password;
+        this.level = level; 
     }
 
+    
+    public int getLevel() {
+		return level;
+	}
+	public void setLevel(int level) {
+		this.level = level;
+	}
+	public Long getUserId() {
+        return userId;
+    }
+    
     public void setUserId(Long userId) {
         this.userId = userId;
     }

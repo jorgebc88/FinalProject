@@ -21,14 +21,11 @@ public class UserDaoImpl implements UserDao{
 	@Autowired
 	SessionFactory sessionFactory;
 
-	Session session = null;
-	Transaction tx = null;
-
 	@SuppressWarnings("unchecked")
 	@Override
 	public boolean addUser(User user) throws Exception {
-		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
+		Session session = sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
 		List<User> userList = session.createQuery("from User where userName = :name ")
 				.setParameter("name", user.getUserName())
 				.list();
@@ -47,7 +44,7 @@ public class UserDaoImpl implements UserDao{
 
 	@Override
 	public User getUserById(long id) throws Exception {
-		session = sessionFactory.openSession();
+		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		User user = (User) session.get(User.class, id);
 		session.flush();
@@ -58,8 +55,8 @@ public class UserDaoImpl implements UserDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<User> getUserList() throws Exception {
-		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
+		Session session = sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
 		List<User> userList = session.createCriteria(User.class)
 				.list();
 		tx.commit();
@@ -70,7 +67,7 @@ public class UserDaoImpl implements UserDao{
 	@Override
 	public boolean deleteUser(long id)
 			throws Exception {
-		session = sessionFactory.openSession();
+		Session session = sessionFactory.openSession();
 		User o = (User) session.load(User.class, id);
 		session.delete(o);
 		session.flush();
@@ -81,8 +78,8 @@ public class UserDaoImpl implements UserDao{
 	@SuppressWarnings("unchecked")
 	@Override
 	public User login(String name, String password) throws Exception{
-		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
+		Session session = sessionFactory.openSession();
+		Transaction tx = session.beginTransaction();
 		List<User> userList = session.createQuery("from User where userName = :name ")
 				.setParameter("name", name)
 				.list();

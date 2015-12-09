@@ -46,6 +46,7 @@ public class UserController {
 	@RequestMapping(value = "/newUser", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public void insert(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			@RequestBody String jsonEntrada) {
+		FinalProjectUtil.addCorsHeader(httpServletResponse);
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
@@ -79,8 +80,8 @@ public class UserController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public @ResponseBody User login(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			@RequestBody String jsonEntrada) {
-		User user = (User) FinalProjectUtil.fromJson(jsonEntrada, User.class);
 		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		User user = (User) FinalProjectUtil.fromJson(jsonEntrada, User.class);
 		if (userSession.getUser() != null) {
 			logger.info("Usuario: " + userSession.getUser().getUserName() + " esta logueado!");
 			return user;
