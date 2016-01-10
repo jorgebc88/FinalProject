@@ -1,7 +1,6 @@
 package com.finalproject.model;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,73 +11,84 @@ import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-
-
 /**
  * Created by Marco on 18/04/2015.
  */
 @Entity
-@Table(name="detected_object")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class DetectedObject implements Serializable{
+@Table(name = "detected_object")
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+public class DetectedObject implements Serializable {
 
-    /**
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2607403988611110166L;
 
 	@Id
-    @GeneratedValue
-    @Column(name = "id")
-    private Long id;
+	@GeneratedValue
+	@Column(name = "id")
+	private Long id;
 
-    @Column(name = "direction")
-    private String direction;
+	@Column(name = "direction")
+	private String direction;
 
-    @Column(name = "objectType")
-    private String ObjectType;
+	@Column(name = "objectType")
+	private String ObjectType;
 
-    @Column(name = "date")
-    private Date date;
-    
-    public DetectedObject(){
-    }
-    public DetectedObject(String direction, String objectType, Date date) {
-    	super();
-    	this.direction = direction;
-        ObjectType = objectType;
-        this.date = date;
-    }
+	@Column(name = "date")
+	private Date date;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Column(name = "camera_id")
+	private int camera_id;
 
-    public void setDirection(String direction) {
-        this.direction = direction;
-    }
+	public DetectedObject() {
+	}
 
-    public void setObjectType(String objectType) {
-        ObjectType = objectType;
-    }
+	public DetectedObject(String direction, String objectType, Date date) {
+		super();
+		this.direction = direction;
+		this.ObjectType = objectType;
+		this.date = date;
+		this.camera_id = 1;
+	}
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public void setDirection(String direction) {
+		this.direction = direction;
+	}
 
-    public String getDirection() {
-        return direction;
-    }
+	public void setObjectType(String objectType) {
+		ObjectType = objectType;
+	}
 
-    public String getObjectType() {
-        return ObjectType;
-    }
+	public void setDate(Date date) {
+		this.date = date;
+	}
 
-    public Date getDate() {
-        return date;
-    }
+	public Long getId() {
+		return id;
+	}
+
+	public String getDirection() {
+		return direction;
+	}
+
+	public String getObjectType() {
+		return ObjectType;
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public int getCamera_id() {
+		return camera_id;
+	}
+
+	public void setCamera_id(int camera_id) {
+		this.camera_id = camera_id;
+	}
 }

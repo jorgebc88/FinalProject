@@ -51,6 +51,7 @@ public class DetectedObjectController {
 			// userSession);
 			DetectedObject detectedObject = (DetectedObject) FinalProjectUtil.fromJson(jsonEntrada,
 					DetectedObject.class);
+			detectedObject.setCamera_id(1);
 			FinalProjectUtil.modifyDetectedObjectCache(detectedObject, detectedObjectSouthCache, detectedObjectNorthCache);
 			this.detectedObjectServices.addDetectedObject(detectedObject);
 			String jsonSalida = FinalProjectUtil.toJson(detectedObject);

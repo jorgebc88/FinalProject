@@ -11,12 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.finalproject.model.User;
 
-
 /**
  * Created by Marco on 18/04/2015.
  */
 
-public class UserDaoImpl implements UserDao{
+public class UserDaoImpl implements UserDao {
 
 	@Autowired
 	SessionFactory sessionFactory;
@@ -27,14 +26,13 @@ public class UserDaoImpl implements UserDao{
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		List<User> userList = session.createQuery("from User where userName = :name ")
-				.setParameter("name", user.getUserName())
-				.list();
+				.setParameter("name", user.getUserName()).list();
 		tx.commit();
-		if(userList.isEmpty()){
+		if (userList.isEmpty()) {
 			tx = session.beginTransaction();
 			session.save(user);
 			tx.commit();
-		}else{
+		} else {
 			session.close();
 			throw new RuntimeException("Usuario Existente!");
 		}
@@ -57,16 +55,14 @@ public class UserDaoImpl implements UserDao{
 	public List<User> getUserList() throws Exception {
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
-		List<User> userList = session.createCriteria(User.class)
-				.list();
+		List<User> userList = session.createCriteria(User.class).list();
 		tx.commit();
 		session.close();
 		return userList;
 	}
-	
+
 	@Override
-	public boolean deleteUser(long id)
-			throws Exception {
+	public boolean deleteUser(long id) throws Exception {
 		Session session = sessionFactory.openSession();
 		User o = (User) session.load(User.class, id);
 		session.delete(o);
@@ -77,20 +73,19 @@ public class UserDaoImpl implements UserDao{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public User login(String name, String password) throws Exception{
+	public User login(String name, String password) throws Exception {
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
-		List<User> userList = session.createQuery("from User where userName = :name ")
-				.setParameter("name", name)
+		List<User> userList = session.createQuery("from User where userName = :name ").setParameter("name", name)
 				.list();
 		tx.commit();
 		session.close();
-		for(User user : userList){
-			if(user.getPassword().equals(password)){
+		for (User user : userList) {
+			if (user.getPassword().equals(password)) {
 				return user;
 			}
 		}
 		return null;
 	}
-	
+
 }
