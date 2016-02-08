@@ -3,11 +3,12 @@ package com.finalproject.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.finalproject.dao.UserDao;
 import com.finalproject.model.User;
 
-
+@Component
 public class UserServicesImpl implements UserServices {
 
 	@Autowired

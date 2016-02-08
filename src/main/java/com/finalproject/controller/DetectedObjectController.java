@@ -1,6 +1,5 @@
 package com.finalproject.controller;
 
-import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class DetectedObjectController {
 	}
 
 	@RequestMapping(value = "/DetectedObject", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public void insert(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+	public void newDetectedObject(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			@RequestBody String jsonEntrada) {
 		FinalProjectUtil.addCorsHeader(httpServletResponse);
 		try {
@@ -51,7 +50,6 @@ public class DetectedObjectController {
 			// userSession);
 			DetectedObject detectedObject = (DetectedObject) FinalProjectUtil.fromJson(jsonEntrada,
 					DetectedObject.class);
-			detectedObject.setCamera_id(1);
 			FinalProjectUtil.modifyDetectedObjectCache(detectedObject, detectedObjectSouthCache, detectedObjectNorthCache);
 			this.detectedObjectServices.addDetectedObject(detectedObject);
 			String jsonSalida = FinalProjectUtil.toJson(detectedObject);
@@ -161,6 +159,25 @@ public class DetectedObjectController {
 			return null;
 		}
 	}
+	
+	@RequestMapping(value = "/deleteDetectedObjectBeforeDate", method = RequestMethod.GET)
+	public @ResponseBody boolean deleteDetectedObjectBeforeDate(HttpServletResponse httpServletResponse,
+			@RequestParam("date") Date date) {
+		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		try {
+			// FinalProjectUtil.userVerification(httpServletResponse,
+			// userSession);
+			return this.detectedObjectServices.deleteDetectedObjectBeforeDate(date);
+		} catch (IllegalAccessException e) {
+			logger.info("No ha iniciado sesión!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		} catch (Exception e) {
+			logger.info("Error encontrado: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return false;
+	}
+
 
 	@RequestMapping(value = "/serverSentEvents", method = RequestMethod.GET, produces = SseFeature.SERVER_SENT_EVENTS)
 	public @ResponseBody String getServerSentEvents(HttpServletResponse httpServletResponse) {

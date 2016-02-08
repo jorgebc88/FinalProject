@@ -1,22 +1,18 @@
 package com.finalproject.dao;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.finalproject.controller.DetectedObjectController;
 import com.finalproject.model.DetectedObject;
-import com.finalproject.util.SessionHibernate;
 
+@Component
 public class DetectedObjectDaoImpl implements DetectedObjectDao {
 	
 	@Autowired
@@ -24,24 +20,17 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 
 	Transaction tx = null;
 
-	static final Logger logger = Logger.getLogger(DetectedObjectDaoImpl.class);
+	static final Logger LOGGER = Logger.getLogger(DetectedObjectDaoImpl.class);
 	
 	@Override
 	public boolean addDetectedObject(DetectedObject detectedObject) throws Exception {
-		logger.info("Se esta por guardar un objeto detectado!" );
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		session.save(detectedObject);
 		tx.commit();
 		session.close();
-		logger.info("Objecto guardado!" );
+		LOGGER.info("Objecto guardado: " + detectedObject.toString() );
 		return true;
-	}
-
-	@Override
-	public DetectedObject getDetectedObjectById(long id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -56,10 +45,18 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 		return detectedObject;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public boolean deleteDetectedObject(long id) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean deleteDetectedObjectBeforeDate(Date date) throws Exception {
+		Session session = sessionFactory.openSession();
+		
+		List<DetectedObject> detectedObjectList = session.createQuery("FROM DetectedObject WHERE date <= :date ")
+				.setParameter("date", date)
+				.list();
+		session.delete(detectedObjectList);
+		session.flush();
+		session.close();
+		return true;
 	}
 
 	@SuppressWarnings({"unchecked" })
@@ -74,7 +71,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 		int hour = date.getHours();
 		int minutes = date.getMinutes();
 		
-		logger.info("Year: " + year + " Month: " + month + " Day: " + day + " Hour: " + hour + " Minute: " + minutes);
+		LOGGER.info("Year: " + year + " Month: " + month + " Day: " + day + " Hour: " + hour + " Minute: " + minutes);
 		List<DetectedObject> detectedObjectList = session.createQuery("FROM DetectedObject WHERE :year = EXTRACT(YEAR FROM Date) AND :month = EXTRACT(MONTH FROM Date) AND :day = EXTRACT(DAY FROM Date) "
 				+ "AND :hour = EXTRACT(HOUR FROM Date) AND :minute = EXTRACT(MINUTE FROM Date)")
 				.setParameter("year", year)
@@ -118,7 +115,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 	@Override
 	public List<DetectedObject> findByDatesBetween(Date startDate, Date endDate) throws Exception {
 		
-		logger.info("Find dates between: " + startDate + " - " + endDate);
+		LOGGER.info("Find dates between: " + startDate + " - " + endDate);
 		int startHour, startMinutes, endHour, endMinutes;
 		startHour = startDate.getHours();
 		startMinutes = startDate.getMinutes();
@@ -134,11 +131,6 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 		startDate.setMinutes(0);
 		endDate.setHours(23);
 		endDate.setMinutes(59);
-		
-		logger.info(startDate);
-		logger.info(endDate);
-		logger.info(Integer.parseInt(startHourMinutes));
-		logger.info(Integer.parseInt(endHourMinutes));
 
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
@@ -149,15 +141,10 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.setParameter("start_hour_minute", Integer.parseInt(startHourMinutes))
 				.setParameter("end_hour_minute", Integer.parseInt(endHourMinutes))
 				.list();
-
-/*		Criteria criteria = session.createCriteria(DetectedObject.class)
-				   .add(Restrictions.between("date", startDate, endDate));
-		List<DetectedObject> detectedObjectList = criteria.list();
-*/		
 		tx.commit();
 		session.close();
 		
-		logger.info("Number of detected objects: " + detectedObjectList.size());
+		LOGGER.info("Number of detected objects: " + detectedObjectList.size());
 		return detectedObjectList;
 	}
 	

@@ -11,17 +11,11 @@ import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
-/**
- * Created by Marco on 18/04/2015.
- */
 @Entity
 @Table(name = "detected_object")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class DetectedObject implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2607403988611110166L;
 
 	@Id
@@ -50,6 +44,15 @@ public class DetectedObject implements Serializable {
 		this.ObjectType = objectType;
 		this.date = date;
 		this.camera_id = 1;
+	}
+
+	public DetectedObject(Long id, String direction, String objectType, Date date, int camera_id) {
+		super();
+		this.id = id;
+		this.direction = direction;
+		ObjectType = objectType;
+		this.date = date;
+		this.camera_id = camera_id;
 	}
 
 	public void setId(Long id) {
@@ -90,5 +93,11 @@ public class DetectedObject implements Serializable {
 
 	public void setCamera_id(int camera_id) {
 		this.camera_id = camera_id;
+	}
+
+	@Override
+	public String toString() {
+		return "DetectedObject [id=" + id + ", direction=" + direction + ", ObjectType=" + ObjectType + ", date=" + date
+				+ ", camera_id=" + camera_id + "]";
 	}
 }

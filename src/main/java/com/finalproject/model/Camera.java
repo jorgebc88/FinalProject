@@ -1,8 +1,6 @@
 package com.finalproject.model;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,9 +20,6 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Camera implements Serializable{
 
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 2607403988611110166L;
 
 	@Id
@@ -32,29 +27,66 @@ public class Camera implements Serializable{
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "ubication")
-    private String ubication;
+    @Column(name = "location")
+    private String location;
+    
+    @Column(name = "latitude")
+    private String latitude;
  
+    @Column(name = "longitude")
+    private String longitude;
+    
     public Camera(){
     }
-    public Camera(String ubication) {
+    
+    public Camera(String location) {
     	super();
-    	this.ubication = ubication;
+    	this.location = location;
     }
 
-    public void setId(Long id) {
+    public Camera(Long id, String location, String latitude, String longitude) {
+		super();
+		this.id = id;
+		this.location = location;
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
+
+	public void setId(Long id) {
         this.id = id;
     }
 
-    public void setUbication(String ubication) {
-        this.ubication = ubication;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getUbication() {
-        return ubication;
+    public String getLocation() {
+        return location;
     }
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+    @Override
+	public String toString() {
+		return "Camera [id=" + id + ", location=" + location + ", latitude=" + latitude + ", longitude=" + longitude
+				+ "]";
+	}
 }

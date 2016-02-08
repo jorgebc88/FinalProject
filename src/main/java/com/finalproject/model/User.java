@@ -1,10 +1,14 @@
 package com.finalproject.model;
 
-import javax.persistence.*;
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-
-import java.io.Serializable;
 
 @Entity
 @Table(name = "USER")
@@ -73,5 +77,10 @@ public class User implements Serializable{
     public boolean isValidPassword(String password) {
         return (this.password.equals(password));
     }
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", userName=" + userName + ", level=" + level + "]";
+	}
 
 }

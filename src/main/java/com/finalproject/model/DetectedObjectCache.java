@@ -1,10 +1,5 @@
 package com.finalproject.model;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-@Component
-@Scope(value = "singleton")
 public class DetectedObjectCache {
 	private int car = 0;
 	private int bus = 0;

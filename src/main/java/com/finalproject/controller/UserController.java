@@ -27,10 +27,7 @@ public class UserController {
 	@Autowired
 	UserSession userSession;
 
-	static final Logger logger = Logger.getLogger(UserController.class);
-
-	public UserController() {
-	}
+	static final Logger LOGGER = Logger.getLogger(UserController.class);
 
 	/**
 	 * Creates a new user for the system
@@ -51,17 +48,15 @@ public class UserController {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
 			User user = (User) FinalProjectUtil.fromJson(jsonEntrada, User.class);
-			if (this.userServices.addUser(user)) {
-				httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-			} else {
-				httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			}
+			this.userServices.addUser(user);
+			LOGGER.info("Nuevo usuario creado: " + user.toString());
+
 			String jsonSalida = FinalProjectUtil.toJson(user);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			httpServletResponse.setContentType("application/json; charset=UTF-8");
 			httpServletResponse.getWriter().println(jsonSalida);
 		} catch (IllegalAccessException ex) {
-			logger.info("No ha iniciado sesión!");
+			LOGGER.info("No ha iniciado sesión!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch (Exception ex) {
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -83,7 +78,7 @@ public class UserController {
 		FinalProjectUtil.addCorsHeader(httpServletResponse);
 		User user = (User) FinalProjectUtil.fromJson(jsonEntrada, User.class);
 		if (userSession.getUser() != null) {
-			logger.info("Usuario: " + userSession.getUser().getUserName() + " esta logueado!");
+			LOGGER.info("Usuario: " + userSession.getUser().getUserName() + " esta logueado!");
 			return user;
 		}
 		try {
@@ -94,10 +89,10 @@ public class UserController {
 			return user;
 		}
 		if (user == null) {
-			logger.info("Usuario y/o contraseña incorrecta.");
+			LOGGER.info("Usuario y/o contraseña incorrecta.");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 		} else {
-			logger.info("Usuario '" + user.getUserName() + "' logueado correctamente!");
+			LOGGER.info("Usuario '" + user.getUserName() + "' logueado correctamente!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			userSession.setUser(user);
 		}
@@ -115,10 +110,10 @@ public class UserController {
 		FinalProjectUtil.addCorsHeader(httpServletResponse);
 		User user = null;
 		if (userSession.getUser() != null) {
-			logger.info("Usuario " + userSession.getUser().getUserName() + " deslogueado correctamente!");
+			LOGGER.info("Usuario " + userSession.getUser().getUserName() + " deslogueado correctamente!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 		} else {
-			logger.info("No existia Usuario Logueado!");
+			LOGGER.info("No existia Usuario Logueado!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 		}
 		userSession.setUser(user);
@@ -136,10 +131,10 @@ public class UserController {
 			System.out.println("USUARIO: " + user.getUserName() + " " + user.getPassword());
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 		} catch (IllegalAccessException ex) {
-			logger.info("No ha iniciado sesión!");
+			LOGGER.info("No ha iniciado sesión!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch (Exception e) {
-			logger.info("Error encontrado: " + e.getMessage());
+			LOGGER.info("Error encontrado: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return user;
@@ -155,10 +150,10 @@ public class UserController {
 			userList = userServices.getUserList();
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 		} catch (IllegalAccessException ex) {
-			logger.info("No ha iniciado sesión!");
+			LOGGER.info("No ha iniciado sesión!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch (Exception e) {
-			logger.info("Error encontrado: " + e.getMessage());
+			LOGGER.info("Error encontrado: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return userList;
@@ -173,10 +168,10 @@ public class UserController {
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			return userServices.deleteUser(id);
 		} catch (IllegalAccessException ex) {
-			logger.info("No ha iniciado sesión!");
+			LOGGER.info("No ha iniciado sesión!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch (Exception e) {
-			logger.info("Error encontrado: " + e.getMessage());
+			LOGGER.info("Error encontrado: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return false;

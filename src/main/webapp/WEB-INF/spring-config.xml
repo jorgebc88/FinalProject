@@ -9,7 +9,8 @@
   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
-	<context:component-scan base-package="com.finalproject.controller" />
+	<context:component-scan
+		base-package="com.finalproject.dao, com.finalproject.services, com.finalproject.model, com.finalproject.controller" />
 	<mvc:annotation-driven />
 
 	<bean id="dataSource"
@@ -27,6 +28,7 @@
 			<list>
 				<value>com.finalproject.model.User</value>
 				<value>com.finalproject.model.DetectedObject</value>
+				<value>com.finalproject.model.Camera</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -45,18 +47,9 @@
 	<bean id="persistenceExceptionTranslationPostProcessor"
 		class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
 
-	<bean id="userDao" class="com.finalproject.dao.UserDaoImpl"></bean>
-	<bean id="DetectedObjectDao" class="com.finalproject.dao.DetectedObjectDaoImpl"></bean>
-	<bean id="userServices" class="com.finalproject.services.UserServicesImpl"></bean>
-	<bean id="detectedObjectServices" class="com.finalproject.services.DetectedObjectServicesImpl"></bean>
 	<bean id="userSession" class="com.finalproject.model.UserSession"
 		scope="session">
 		<aop:scoped-proxy />
 	</bean>
-	<bean id="detectedObjectSouthCache" class="com.finalproject.model.DetectedObjectSouthCache"
-		scope="singleton"></bean>
-	<bean id="detectedObjectNorthCache" class="com.finalproject.model.DetectedObjectNorthCache"
-		scope="singleton"></bean>
-		
 
 </beans>

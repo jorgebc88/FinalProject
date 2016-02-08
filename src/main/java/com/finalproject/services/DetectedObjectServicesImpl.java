@@ -4,10 +4,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.finalproject.dao.DetectedObjectDao;
 import com.finalproject.model.DetectedObject;
 
+@Component
 public class DetectedObjectServicesImpl implements DetectedObjectServices {
 	@Autowired
 	DetectedObjectDao detectedObjectDao;
@@ -19,18 +21,13 @@ public class DetectedObjectServicesImpl implements DetectedObjectServices {
 	}
 
 	@Override
-	public DetectedObject getDetectedObjectById(long id) throws Exception {
-		return this.detectedObjectDao.getDetectedObjectById(id);
-	}
-
-	@Override
 	public List<DetectedObject> getDetectedObjectList() throws Exception {
 		return this.detectedObjectDao.getDetectedObjectList();
 	}
 
 	@Override
-	public boolean deleteDetectedObject(long id) throws Exception {
-		return this.detectedObjectDao.deleteDetectedObject(id);
+	public boolean deleteDetectedObjectBeforeDate(Date date) throws Exception{
+		return this.detectedObjectDao.deleteDetectedObjectBeforeDate(date);
 	}
 
 	@Override

@@ -7,9 +7,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.finalproject.model.Camera;
 
+@Component
 public class CameraDaoImpl implements CameraDao {
 
 	@Autowired
@@ -17,17 +19,16 @@ public class CameraDaoImpl implements CameraDao {
 
 	Transaction tx = null;
 
-	static final Logger logger = Logger.getLogger(CameraDaoImpl.class);
+	static final Logger LOGGER = Logger.getLogger(CameraDaoImpl.class);
 
 	@Override
 	public boolean addCamera(Camera camera) throws Exception {
-		logger.info("Se esta por guardar una Camara!");
 		Session session = sessionFactory.openSession();
 		Transaction tx = session.beginTransaction();
 		session.save(camera);
 		tx.commit();
 		session.close();
-		logger.info("Camara guardado!");
+		LOGGER.info("Camara guardada: " + camera.toString());
 		return true;
 	}
 

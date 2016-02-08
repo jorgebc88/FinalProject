@@ -7,9 +7,8 @@ import com.finalproject.model.DetectedObject;
 
 public interface DetectedObjectDao {
 	public boolean addDetectedObject(DetectedObject detectedObject) throws Exception;
-	public DetectedObject getDetectedObjectById(long id) throws Exception;
 	public List<DetectedObject> getDetectedObjectList() throws Exception;
-	public boolean deleteDetectedObject(long id) throws Exception;
+	boolean deleteDetectedObjectBeforeDate(Date date) throws Exception;
 	
 	public List<DetectedObject> findByDate(Date date) throws Exception;
 	public List<DetectedObject> findByMonth(int Month) throws Exception;

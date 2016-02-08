@@ -3,7 +3,6 @@ package com.finalproject.util;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class SessionHibernate {
 
