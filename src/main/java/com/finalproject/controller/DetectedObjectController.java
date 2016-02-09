@@ -181,7 +181,7 @@ public class DetectedObjectController {
 
 	@RequestMapping(value = "/serverSentEvents", method = RequestMethod.GET, produces = SseFeature.SERVER_SENT_EVENTS)
 	public @ResponseBody String getServerSentEvents(HttpServletResponse httpServletResponse) {
-
+		
 		logger.info("South: " + FinalProjectUtil.toJson(detectedObjectSouthCache));
 		logger.info("North: " + FinalProjectUtil.toJson(detectedObjectNorthCache));
 		StringBuilder data = new StringBuilder("retry: 500\n");

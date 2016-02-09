@@ -28,7 +28,7 @@ public class CameraController {
 	@Autowired
 	UserSession userSession;
 
-	static final Logger logger = Logger.getLogger(CameraController.class);
+	static final Logger LOGGER = Logger.getLogger(CameraController.class);
 
 	/**
 	 * Creates a new user for the system
@@ -59,7 +59,7 @@ public class CameraController {
 			httpServletResponse.setContentType("application/json; charset=UTF-8");
 			httpServletResponse.getWriter().println(jsonSalida);
 		} catch (IllegalAccessException ex) {
-			logger.info("No ha iniciado sesión!");
+			LOGGER.info("No ha iniciado sesión!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch (Exception ex) {
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -87,10 +87,10 @@ public class CameraController {
 			System.out.println(camera.toString());
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 		} catch (IllegalAccessException ex) {
-			logger.info("No ha iniciado sesión!");
+			LOGGER.info("No ha iniciado sesión!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch (Exception e) {
-			logger.info("Error encontrado: " + e.getMessage());
+			LOGGER.info("Error encontrado: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return camera;
@@ -106,10 +106,10 @@ public class CameraController {
 			cameraList = cameraServices.getCameraList();
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 		} catch (IllegalAccessException ex) {
-			logger.info("No ha iniciado sesión!");
+			LOGGER.info("No ha iniciado sesión!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch (Exception e) {
-			logger.info("Error encontrado: " + e.getMessage());
+			LOGGER.info("Error encontrado: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return cameraList;
@@ -124,10 +124,10 @@ public class CameraController {
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			return cameraServices.deleteCamera(id);
 		} catch (IllegalAccessException ex) {
-			logger.info("No ha iniciado sesión!");
+			LOGGER.info("No ha iniciado sesión!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch (Exception e) {
-			logger.info("Error encontrado: " + e.getMessage());
+			LOGGER.info("Error encontrado: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return false;

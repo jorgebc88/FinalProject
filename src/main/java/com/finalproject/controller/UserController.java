@@ -41,14 +41,15 @@ public class UserController {
 	 */
 
 	@RequestMapping(value = "/newUser", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public void insert(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+	public boolean newUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			@RequestBody String jsonEntrada) {
 		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		boolean status = false;
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
 			User user = (User) FinalProjectUtil.fromJson(jsonEntrada, User.class);
-			this.userServices.addUser(user);
+			status = this.userServices.addUser(user);
 			LOGGER.info("Nuevo usuario creado: " + user.toString());
 
 			String jsonSalida = FinalProjectUtil.toJson(user);
@@ -61,6 +62,7 @@ public class UserController {
 		} catch (Exception ex) {
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
+		return status;
 	}
 
 	/**
@@ -141,7 +143,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public @ResponseBody List<User> getUser(HttpServletResponse httpServletResponse) {
+	public @ResponseBody List<User> getUsers(HttpServletResponse httpServletResponse) {
 		FinalProjectUtil.addCorsHeader(httpServletResponse);
 		List<User> userList = null;
 		try {

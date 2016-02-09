@@ -36,6 +36,10 @@ public class Camera implements Serializable{
     @Column(name = "longitude")
     private String longitude;
     
+    @Column(name = "ip")
+    private String ip;
+
+    
     public Camera(){
     }
     
@@ -44,12 +48,13 @@ public class Camera implements Serializable{
     	this.location = location;
     }
 
-    public Camera(Long id, String location, String latitude, String longitude) {
+    public Camera(Long id, String location, String latitude, String longitude, String ip) {
 		super();
 		this.id = id;
 		this.location = location;
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.ip = ip;
 	}
 
 	public void setId(Long id) {
@@ -84,9 +89,17 @@ public class Camera implements Serializable{
 		this.longitude = longitude;
 	}
 
-    @Override
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	@Override
 	public String toString() {
 		return "Camera [id=" + id + ", location=" + location + ", latitude=" + latitude + ", longitude=" + longitude
-				+ "]";
+				+ ", ip=" + ip + "]";
 	}
 }
