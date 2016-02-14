@@ -5,7 +5,7 @@
 	<artifactId>FinalProject</artifactId>
 	<packaging>war</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>Final Project</name>
+	<name>REST-API</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<spring.version>4.0.5.RELEASE</spring.version>
