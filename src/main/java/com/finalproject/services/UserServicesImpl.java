@@ -1,19 +1,18 @@
 package com.finalproject.services;
 
-import java.util.List;
-
+import com.finalproject.dao.UserDao;
+import com.finalproject.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.finalproject.dao.UserDao;
-import com.finalproject.model.User;
+import java.util.List;
 
 @Component
 public class UserServicesImpl implements UserServices {
 
 	@Autowired
 	UserDao userDao;
-	
+
 	@Override
 	public boolean addUser(User user) throws Exception {
 		return userDao.addUser(user);
@@ -33,12 +32,11 @@ public class UserServicesImpl implements UserServices {
 	public boolean deleteUser(long id) throws Exception {
 		return userDao.deleteUser(id);
 	}
-	
-    @Override
-    public User login(String name, String password) throws Exception{
-    	return this.userDao.login(name, password);
-    }
 
-	
-	
+	@Override
+	public User login(String name, String password) throws Exception {
+		return this.userDao.login(name, password);
+	}
+
+
 }

@@ -4,8 +4,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope(value = "singleton")
+@Scope(value = "prototype")
 public class DetectedObjectSouthCache extends DetectedObjectCache {
 	private String direction = "South";
-	
+
 }

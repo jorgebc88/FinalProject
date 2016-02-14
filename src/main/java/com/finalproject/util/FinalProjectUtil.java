@@ -1,9 +1,5 @@
 package com.finalproject.util;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finalproject.model.DetectedObject;
@@ -11,15 +7,18 @@ import com.finalproject.model.DetectedObjectNorthCache;
 import com.finalproject.model.DetectedObjectSouthCache;
 import com.finalproject.model.UserSession;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 public class FinalProjectUtil {
 
 	public static void addCorsHeader(HttpServletResponse response) {
 		// TODO: externalize the Allow-Origin
 		response.addHeader("Access-Control-Allow-Origin", "*");
-        response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
-        response.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept");
-        response.addHeader("Access-Control-Max-Age", "1728000");
-    }
+		response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
+		response.addHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept");
+		response.addHeader("Access-Control-Max-Age", "1728000");
+	}
 
 	public static void userVerification(HttpServletResponse httpServletResponse, UserSession userSession)
 			throws IllegalAccessException {
@@ -38,7 +37,7 @@ public class FinalProjectUtil {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	public static Object fromJson(String json, Class clazz) {
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
@@ -47,16 +46,16 @@ public class FinalProjectUtil {
 			throw new RuntimeException(ex);
 		}
 	}
-	
+
 	public static void modifyDetectedObjectCache(DetectedObject detectedObject, DetectedObjectSouthCache detectedObjectSouthCache, DetectedObjectNorthCache detectedObjectNorthCache) {
 		String type = detectedObject.getObjectType();
 		String direction = detectedObject.getDirection();
-		if(direction.equals("South")){
+		if (direction.equals("South")) {
 			detectedObjectSouthCache.incrementValue(type);
-		}else{
+		} else {
 			detectedObjectNorthCache.incrementValue(type);
 		}
 	}
 
-	
+
 }

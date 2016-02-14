@@ -1,19 +1,14 @@
 package com.finalproject.model;
 
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-
 @Entity
 @Table(name = "detected_object")
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class DetectedObject implements Serializable {
 
 	private static final long serialVersionUID = 2607403988611110166L;
@@ -33,7 +28,7 @@ public class DetectedObject implements Serializable {
 	private Date date;
 
 	@Column(name = "camera_id")
-	private int camera_id;
+	private long camera_id;
 
 	public DetectedObject() {
 	}
@@ -46,11 +41,11 @@ public class DetectedObject implements Serializable {
 		this.camera_id = 1;
 	}
 
-	public DetectedObject(Long id, String direction, String objectType, Date date, int camera_id) {
+	public DetectedObject(long id, String direction, String objectType, Date date, long camera_id) {
 		super();
 		this.id = id;
 		this.direction = direction;
-		ObjectType = objectType;
+		this.ObjectType = objectType;
 		this.date = date;
 		this.camera_id = camera_id;
 	}
@@ -87,7 +82,7 @@ public class DetectedObject implements Serializable {
 		return date;
 	}
 
-	public int getCamera_id() {
+	public long getCamera_id() {
 		return camera_id;
 	}
 

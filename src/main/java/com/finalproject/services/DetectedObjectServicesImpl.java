@@ -1,13 +1,12 @@
 package com.finalproject.services;
 
-import java.util.Date;
-import java.util.List;
-
+import com.finalproject.dao.DetectedObjectDao;
+import com.finalproject.model.DetectedObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.finalproject.dao.DetectedObjectDao;
-import com.finalproject.model.DetectedObject;
+import java.util.Date;
+import java.util.List;
 
 @Component
 public class DetectedObjectServicesImpl implements DetectedObjectServices {
@@ -26,28 +25,33 @@ public class DetectedObjectServicesImpl implements DetectedObjectServices {
 	}
 
 	@Override
-	public boolean deleteDetectedObjectBeforeDate(Date date) throws Exception{
-		return this.detectedObjectDao.deleteDetectedObjectBeforeDate(date);
+	public List<DetectedObject> getDetectedObjectListByCameraId(long cameraId) throws Exception {
+		return this.detectedObjectDao.getDetectedObjectListByCameraId(cameraId);
 	}
 
 	@Override
-	public List<DetectedObject> findByDate(Date date) throws Exception {
-		return this.detectedObjectDao.findByDate(date);
+	public boolean deleteDetectedObjectBeforeDateByCameraId(Date date, long cameraId) throws Exception {
+		return this.detectedObjectDao.deleteDetectedObjectBeforeDateByCameraId(date, cameraId);
 	}
 
 	@Override
-	public List<DetectedObject> findByMonth(int Month) throws Exception {
-		return this.detectedObjectDao.findByMonth(Month);
+	public List<DetectedObject> findByDateAndCameraId(Date date, long cameraId) throws Exception {
+		return this.detectedObjectDao.findByDateAndCameraId(date, cameraId);
 	}
 
 	@Override
-	public List<DetectedObject> findByYear(int Year) throws Exception {
-		return this.detectedObjectDao.findByYear(Year);
+	public List<DetectedObject> findByMonthAndCameraId(int Month, long cameraId) throws Exception {
+		return this.detectedObjectDao.findByMonthAndCameraId(Month, cameraId);
 	}
 
 	@Override
-	public List<DetectedObject> findByDatesBetween(Date startDate, Date endDate)
+	public List<DetectedObject> findByYearAndCameraId(int Year, long cameraId) throws Exception {
+		return this.detectedObjectDao.findByYearAndCameraId(Year, cameraId);
+	}
+
+	@Override
+	public List<DetectedObject> findByDatesBetweenAndCameraId(Date startDate, Date endDate, long cameraId)
 			throws Exception {
-		return this.detectedObjectDao.findByDatesBetween(startDate, endDate);
+		return this.detectedObjectDao.findByDatesBetweenAndCameraId(startDate, endDate, cameraId);
 	}
 }

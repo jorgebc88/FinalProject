@@ -1,54 +1,47 @@
 package com.finalproject.model;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
+import javax.persistence.*;
+import java.io.Serializable;
 
 
 /**
- * Created by Marco on 18/04/2015.
  */
 @Entity
-@Table(name="camera")
+@Table(name = "camera")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Camera implements Serializable{
+public class Camera implements Serializable {
 
 	private static final long serialVersionUID = 2607403988611110166L;
 
 	@Id
-    @GeneratedValue
-    @Column(name = "id")
-    private Long id;
+	@GeneratedValue
+	@Column(name = "id")
+	private Long id;
 
-    @Column(name = "location")
-    private String location;
-    
-    @Column(name = "latitude")
-    private String latitude;
- 
-    @Column(name = "longitude")
-    private String longitude;
-    
-    @Column(name = "ip")
-    private String ip;
+	@Column(name = "location")
+	private String location;
 
-    
-    public Camera(){
-    }
-    
-    public Camera(String location) {
-    	super();
-    	this.location = location;
-    }
+	@Column(name = "latitude")
+	private String latitude;
 
-    public Camera(Long id, String location, String latitude, String longitude, String ip) {
+	@Column(name = "longitude")
+	private String longitude;
+
+	@Column(name = "ip")
+	private String ip;
+
+
+	public Camera() {
+	}
+
+	public Camera(String location) {
+		super();
+		this.location = location;
+	}
+
+	public Camera(Long id, String location, String latitude, String longitude, String ip) {
 		super();
 		this.id = id;
 		this.location = location;
@@ -58,20 +51,20 @@ public class Camera implements Serializable{
 	}
 
 	public void setId(Long id) {
-        this.id = id;
-    }
+		this.id = id;
+	}
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
+	public void setLocation(String location) {
+		this.location = location;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getLocation() {
-        return location;
-    }
+	public String getLocation() {
+		return location;
+	}
 
 	public String getLatitude() {
 		return latitude;

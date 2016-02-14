@@ -1,23 +1,17 @@
 package com.finalproject.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.finalproject.model.User;
 import com.finalproject.model.UserSession;
 import com.finalproject.services.UserServices;
 import com.finalproject.util.FinalProjectUtil;
+import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Controller
 @RequestMapping("/user")
@@ -31,56 +25,54 @@ public class UserController {
 
 	/**
 	 * Creates a new user for the system
-	 * 
-	 * @param userName
-	 *            The new user name
-	 * @param password
-	 *            The password for the new user
+	 *
+	 * @param httpServletRequest
+	 * @param httpServletResponse
+	 * @param jsonInput
 	 * @return
-	 * @throws Exception
 	 */
-
 	@RequestMapping(value = "/newUser", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public boolean newUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-			@RequestBody String jsonEntrada) {
+	public void newUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+						@RequestBody String jsonInput) {
 		FinalProjectUtil.addCorsHeader(httpServletResponse);
-		boolean status = false;
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
-			User user = (User) FinalProjectUtil.fromJson(jsonEntrada, User.class);
-			status = this.userServices.addUser(user);
-			LOGGER.info("Nuevo usuario creado: " + user.toString());
+			User user = (User) FinalProjectUtil.fromJson(jsonInput, User.class);
+			this.userServices.addUser(user);
+			LOGGER.info("New user created: " + user.toString());
 
-			String jsonSalida = FinalProjectUtil.toJson(user);
+			String jsonOutput = FinalProjectUtil.toJson(user);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			httpServletResponse.setContentType("application/json; charset=UTF-8");
-			httpServletResponse.getWriter().println(jsonSalida);
+			httpServletResponse.getWriter().println(jsonOutput);
+			LOGGER.info(httpServletResponse);
 		} catch (IllegalAccessException ex) {
-			LOGGER.info("No ha iniciado sesión!");
+			LOGGER.error("Trying to create user without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch (Exception ex) {
+			LOGGER.error("Error found: " + ex.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
-		return status;
 	}
 
 	/**
 	 * Provides the service required for the user to login
-	 * 
-	 * @param userName
-	 *            The name of the user who wants to login.
-	 * @param password
-	 *            The user's password.
+	 *
+	 * @param httpServletRequest
+	 * @param httpServletResponse
+	 * @param jsonEntrada
 	 * @return
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public @ResponseBody User login(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-			@RequestBody String jsonEntrada) {
+	public
+	@ResponseBody
+	User login(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+			   @RequestBody String jsonEntrada) {
 		FinalProjectUtil.addCorsHeader(httpServletResponse);
 		User user = (User) FinalProjectUtil.fromJson(jsonEntrada, User.class);
 		if (userSession.getUser() != null) {
-			LOGGER.info("Usuario: " + userSession.getUser().getUserName() + " esta logueado!");
+			LOGGER.info("User: " + userSession.getUser().getUserName() + " is already logged!");
 			return user;
 		}
 		try {
@@ -91,10 +83,10 @@ public class UserController {
 			return user;
 		}
 		if (user == null) {
-			LOGGER.info("Usuario y/o contraseña incorrecta.");
+			LOGGER.info("User or password wrong.");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 		} else {
-			LOGGER.info("Usuario '" + user.getUserName() + "' logueado correctamente!");
+			LOGGER.info("User '" + user.getUserName() + "' logged successfully!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			userSession.setUser(user);
 		}
@@ -102,20 +94,21 @@ public class UserController {
 	}
 
 	/**
-	 * Provides the service required for the user to logout
-	 * 
+	 * @param httpServletResponse
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public @ResponseBody User logout(HttpServletResponse httpServletResponse) throws Exception {
+	public
+	@ResponseBody
+	User logout(HttpServletResponse httpServletResponse) throws Exception {
 		FinalProjectUtil.addCorsHeader(httpServletResponse);
 		User user = null;
 		if (userSession.getUser() != null) {
-			LOGGER.info("Usuario " + userSession.getUser().getUserName() + " deslogueado correctamente!");
+			LOGGER.info("User " + userSession.getUser().getUserName() + " logout successfully!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 		} else {
-			LOGGER.info("No existia Usuario Logueado!");
+			LOGGER.info("There was no user logged!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 		}
 		userSession.setUser(user);
@@ -123,27 +116,30 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public @ResponseBody User getUser(HttpServletResponse httpServletResponse, @PathVariable("id") long id) {
+	public
+	@ResponseBody
+	User getUser(HttpServletResponse httpServletResponse, @PathVariable("id") long id) {
 		FinalProjectUtil.addCorsHeader(httpServletResponse);
 		User user = null;
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
 			user = userServices.getUserById(id);
-			System.out.println("USUARIO: " + user.getUserName() + " " + user.getPassword());
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 		} catch (IllegalAccessException ex) {
-			LOGGER.info("No ha iniciado sesión!");
+			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch (Exception e) {
-			LOGGER.info("Error encontrado: " + e.getMessage());
+			LOGGER.info("Error found: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return user;
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public @ResponseBody List<User> getUsers(HttpServletResponse httpServletResponse) {
+	public
+	@ResponseBody
+	List<User> getUsers(HttpServletResponse httpServletResponse) {
 		FinalProjectUtil.addCorsHeader(httpServletResponse);
 		List<User> userList = null;
 		try {
@@ -152,17 +148,19 @@ public class UserController {
 			userList = userServices.getUserList();
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 		} catch (IllegalAccessException ex) {
-			LOGGER.info("No ha iniciado sesión!");
+			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch (Exception e) {
-			LOGGER.info("Error encontrado: " + e.getMessage());
+			LOGGER.info("Error found: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return userList;
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.GET)
-	public @ResponseBody boolean deleteUser(HttpServletResponse httpServletResponse, @PathVariable("id") long id) {
+	public
+	@ResponseBody
+	boolean deleteUser(HttpServletResponse httpServletResponse, @PathVariable("id") long id) {
 		FinalProjectUtil.addCorsHeader(httpServletResponse);
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
@@ -170,10 +168,10 @@ public class UserController {
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			return userServices.deleteUser(id);
 		} catch (IllegalAccessException ex) {
-			LOGGER.info("No ha iniciado sesión!");
+			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch (Exception e) {
-			LOGGER.info("Error encontrado: " + e.getMessage());
+			LOGGER.info("Error found: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return false;

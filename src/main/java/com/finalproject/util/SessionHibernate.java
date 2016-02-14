@@ -10,19 +10,20 @@ public class SessionHibernate {
 	private static Session session;
 	static final Logger LOGGER = Logger.getLogger(SessionHibernate.class);
 
-	public SessionHibernate(SessionFactory sessionFactory){
+	public SessionHibernate(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
-		this.session = this.sessionFactory.openSession();;
+		this.session = this.sessionFactory.openSession();
+		;
 	}
-	
-	
-	public static Session getInstance(){
+
+
+	public static Session getInstance() {
 		LOGGER.info("Instancia actual: " + session);
 		return session;
 	}
-	
-	public static void closeSession(){
+
+	public static void closeSession() {
 		session.close();
 	}
-	
+
 }

@@ -1,7 +1,6 @@
 package com.finalproject.dao;
 
-import java.util.List;
-
+import com.finalproject.model.Camera;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -9,7 +8,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.finalproject.model.Camera;
+import java.util.List;
 
 @Component
 public class CameraDaoImpl implements CameraDao {

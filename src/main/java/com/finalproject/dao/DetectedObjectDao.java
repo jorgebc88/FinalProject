@@ -1,18 +1,24 @@
 package com.finalproject.dao;
 
+import com.finalproject.model.DetectedObject;
+
 import java.util.Date;
 import java.util.List;
 
-import com.finalproject.model.DetectedObject;
-
 public interface DetectedObjectDao {
 	public boolean addDetectedObject(DetectedObject detectedObject) throws Exception;
-	public List<DetectedObject> getDetectedObjectList() throws Exception;
-	boolean deleteDetectedObjectBeforeDate(Date date) throws Exception;
-	
-	public List<DetectedObject> findByDate(Date date) throws Exception;
-	public List<DetectedObject> findByMonth(int Month) throws Exception;
-	public List<DetectedObject> findByYear(int Year) throws Exception;
-	public List<DetectedObject> findByDatesBetween(Date startDate, Date endDate) throws Exception;
 
+	public List<DetectedObject> getDetectedObjectList() throws Exception;
+
+	public List<DetectedObject> getDetectedObjectListByCameraId(long cameraId);
+
+	boolean deleteDetectedObjectBeforeDateByCameraId(Date date, long cameraId) throws Exception;
+
+	public List<DetectedObject> findByDateAndCameraId(Date date, long cameraId) throws Exception;
+
+	public List<DetectedObject> findByMonthAndCameraId(int month, long cameraId) throws Exception;
+
+	public List<DetectedObject> findByYearAndCameraId(int Year, long cameraId) throws Exception;
+
+	public List<DetectedObject> findByDatesBetweenAndCameraId(Date startDate, Date endDate, long cameraId) throws Exception;
 }

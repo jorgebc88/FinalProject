@@ -1,18 +1,17 @@
 package com.finalproject.services;
 
-import java.util.List;
-
+import com.finalproject.dao.CameraDao;
+import com.finalproject.model.Camera;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.finalproject.dao.CameraDao;
-import com.finalproject.model.Camera;
+import java.util.List;
 
 @Component
-public class CameraServicesImpl implements CameraServices{
+public class CameraServicesImpl implements CameraServices {
 	@Autowired
 	CameraDao cameraDao;
-	
+
 	@Override
 	public boolean addCamera(Camera camera) throws Exception {
 		return this.cameraDao.addCamera(camera);
@@ -21,7 +20,7 @@ public class CameraServicesImpl implements CameraServices{
 	@Override
 	public Camera getCameraById(long id) throws Exception {
 		return this.cameraDao.getCameraById(id);
-		}
+	}
 
 	@Override
 	public List<Camera> getCameraList() throws Exception {
