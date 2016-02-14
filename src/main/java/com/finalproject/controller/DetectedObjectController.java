@@ -30,9 +30,6 @@ public class DetectedObjectController {
 
 	static final Logger LOGGER = Logger.getLogger(DetectedObjectController.class);
 
-	public DetectedObjectController() {
-	}
-
 	@RequestMapping(value = "/DetectedObject", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public void newDetectedObject(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 								  @RequestBody String jsonInput) {

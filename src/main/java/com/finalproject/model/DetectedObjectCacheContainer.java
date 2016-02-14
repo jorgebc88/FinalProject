@@ -1,15 +1,10 @@
 package com.finalproject.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-
 public class DetectedObjectCacheContainer {
 
-	@Autowired
-	DetectedObjectSouthCache detectedObjectSouthCache;
+	DetectedObjectSouthCache detectedObjectSouthCache = new DetectedObjectSouthCache();
 
-	@Autowired
-	DetectedObjectNorthCache detectedObjectNorthCache;
+	DetectedObjectNorthCache detectedObjectNorthCache = new DetectedObjectNorthCache();
 
 
 	public DetectedObjectNorthCache getDetectedObjectNorthCache() {
