@@ -32,4 +32,9 @@ public class CameraServicesImpl implements CameraServices {
 		return this.cameraDao.deleteCamera(id);
 	}
 
+	@Override
+	public boolean modifyCamera(long id, boolean active) {
+		return this.cameraDao.modifyCamera(id, active);
+	}
+
 }

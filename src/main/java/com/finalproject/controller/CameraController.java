@@ -125,4 +125,27 @@ public class CameraController {
 		return false;
 	}
 
+	@RequestMapping(value = "modifyCamera", method = RequestMethod.GET)
+	public
+	@ResponseBody
+	boolean modifyCamera(HttpServletResponse httpServletResponse,
+						 @RequestParam("id") long id,
+						 @RequestParam("active") boolean active) {
+		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		try {
+			// FinalProjectUtil.userVerification(httpServletResponse,
+			// userSession);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return cameraServices.modifyCamera(id, active);
+		} catch (IllegalAccessException ex) {
+			LOGGER.info("Trying to request info without logging!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+		} catch (Exception e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		return false;
+	}
+
+
 }

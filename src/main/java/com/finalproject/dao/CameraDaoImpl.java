@@ -61,4 +61,18 @@ public class CameraDaoImpl implements CameraDao {
 		session.close();
 		return true;
 	}
+
+	@Override
+	public boolean modifyCamera(long id, boolean active) throws Exception {
+		Session session = sessionFactory.openSession();
+		Transaction tx = null;
+		tx = session.beginTransaction();
+		Camera camera =
+				(Camera) session.get(Camera.class, id);
+		camera.setActive(active);
+		session.update(camera);
+		tx.commit();
+		session.close();
+		return true;
+	}
 }

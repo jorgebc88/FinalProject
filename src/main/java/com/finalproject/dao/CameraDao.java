@@ -13,4 +13,5 @@ public interface CameraDao {
 
 	public boolean deleteCamera(long id) throws Exception;
 
+	public boolean modifyCamera(long id, boolean active) throws Exception;
 }
