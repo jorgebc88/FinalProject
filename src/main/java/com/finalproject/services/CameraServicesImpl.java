@@ -33,7 +33,7 @@ public class CameraServicesImpl implements CameraServices {
 	}
 
 	@Override
-	public boolean modifyCamera(long id, boolean active) {
+	public boolean modifyCamera(long id, boolean active) throws Exception {
 		return this.cameraDao.modifyCamera(id, active);
 	}
 

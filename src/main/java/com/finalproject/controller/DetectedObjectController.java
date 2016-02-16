@@ -70,7 +70,9 @@ public class DetectedObjectController {
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
-			return this.detectedObjectServices.getDetectedObjectList();
+			List<DetectedObject> detectedObjectList = this.detectedObjectServices.getDetectedObjectList();
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return detectedObjectList;
 		} catch (IllegalAccessException e) {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -92,7 +94,9 @@ public class DetectedObjectController {
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
-			return this.detectedObjectServices.getDetectedObjectListByCameraId(cameraId);
+			List<DetectedObject> detectedObjectList = this.detectedObjectServices.getDetectedObjectListByCameraId(cameraId);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return detectedObjectList;
 		} catch (IllegalAccessException e) {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -118,7 +122,9 @@ public class DetectedObjectController {
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
-			return this.detectedObjectServices.findByDateAndCameraId(date, cameraId);
+			List<DetectedObject> detectedObjectList = this.detectedObjectServices.findByDateAndCameraId(date, cameraId);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return detectedObjectList;
 		} catch (IllegalAccessException e) {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -144,7 +150,9 @@ public class DetectedObjectController {
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
-			return this.detectedObjectServices.findByMonthAndCameraId(month, cameraId);
+			List<DetectedObject> detectedObjectList = this.detectedObjectServices.findByMonthAndCameraId(month, cameraId);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return detectedObjectList;
 		} catch (IllegalAccessException e) {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -166,7 +174,9 @@ public class DetectedObjectController {
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
-			return this.detectedObjectServices.findByYearAndCameraId(year, cameraId);
+			List<DetectedObject> detectedObjectList = this.detectedObjectServices.findByYearAndCameraId(year, cameraId);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return detectedObjectList;
 		} catch (IllegalAccessException e) {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -188,7 +198,9 @@ public class DetectedObjectController {
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
-			return this.detectedObjectServices.findByDatesBetweenAndCameraId(startDate, endDate, cameraId);
+			List<DetectedObject> detectedObjectList = this.detectedObjectServices.findByDatesBetweenAndCameraId(startDate, endDate, cameraId);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return detectedObjectList;
 		} catch (IllegalAccessException e) {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -210,7 +222,9 @@ public class DetectedObjectController {
 		try {
 			// FinalProjectUtil.userVerification(httpServletResponse,
 			// userSession);
-			return this.detectedObjectServices.deleteDetectedObjectBeforeDateByCameraId(date, cameraId);
+			boolean deleteSuccessful = this.detectedObjectServices.deleteDetectedObjectBeforeDateByCameraId(date, cameraId);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return deleteSuccessful;
 		} catch (IllegalAccessException e) {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
