@@ -7,7 +7,12 @@ import com.finalproject.util.Utils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +30,7 @@ public class CameraController {
 	static final Logger LOGGER = Logger.getLogger(CameraController.class);
 
 	/**
-	 * Creates a new user for the system
+	 * Creates a new camera for the system
 	 *
 	 * @return
 	 * @throws Exception
@@ -36,8 +41,6 @@ public class CameraController {
 						  @RequestBody String jsonInput) {
 		Utils.addCorsHeader(httpServletResponse);
 		try {
-			// Utils.userVerification(httpServletResponse,
-			// userSession);
 			Camera camera = (Camera) Utils.fromJson(jsonInput, Camera.class);
 			if (this.cameraServices.addCamera(camera)) {
 				httpServletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -56,11 +59,6 @@ public class CameraController {
 		}
 	}
 
-	/**
-	 * Provides the service required for the user to login
-	 *
-	 * @return
-	 */
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public
@@ -69,8 +67,6 @@ public class CameraController {
 		Utils.addCorsHeader(httpServletResponse);
 		Camera camera = null;
 		try {
-			// Utils.userVerification(httpServletResponse,
-			// userSession);
 			camera = cameraServices.getCameraById(id);
 			System.out.println(camera.toString());
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -90,8 +86,6 @@ public class CameraController {
 		Utils.addCorsHeader(httpServletResponse);
 		List<Camera> cameraList = null;
 		try {
-			// Utils.userVerification(httpServletResponse,
-			// userSession);
 			cameraList = cameraServices.getCameraList();
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 		} catch (IllegalAccessException ex) {
@@ -109,8 +103,6 @@ public class CameraController {
 	boolean deleteCamera(HttpServletResponse httpServletResponse, @PathVariable("id") long id) {
 		Utils.addCorsHeader(httpServletResponse);
 		try {
-			// Utils.userVerification(httpServletResponse,
-			// userSession);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			return cameraServices.deleteCamera(id);
 		} catch (IllegalAccessException ex) {
@@ -130,8 +122,6 @@ public class CameraController {
 						 @RequestParam("active") boolean active) {
 		Utils.addCorsHeader(httpServletResponse);
 		try {
-			// Utils.userVerification(httpServletResponse,
-			// userSession);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			return cameraServices.modifyCamera(id, active);
 		} catch (IllegalAccessException ex) {

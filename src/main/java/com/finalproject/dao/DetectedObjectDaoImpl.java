@@ -3,12 +3,14 @@ package com.finalproject.dao;
 import com.finalproject.model.DetectedObject;
 import com.finalproject.util.Utils;
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -171,12 +173,132 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 		return detectedObjectList;
 	}
 
-	/*
-	private void listSizeVerifier(List<DetectedObject> detectedObjectList) {
-		if(detectedObjectList.size() == 0){
-			throw new RuntimeException("No elements were found!");
+	@SuppressWarnings({"unchecked", "deprecation"})
+	@Override
+	public List<DetectedObject> allTimeDetectedObjectsRanking() throws Exception {
+		Session session = sessionFactory.openSession();
+		Transaction transaction;
+		List<DetectedObject> allTimeRanking;
+		StringBuilder hql = new StringBuilder("SELECT camera_id, COUNT(*) AS num FROM DetectedObject")
+				.append(" GROUP BY camera_id")
+				.append(" ORDER BY num DESC");
+		allTimeRanking = session.createQuery(hql.toString()).list();
+
+		try {
+			transaction = session.beginTransaction();
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			session.close();
+			throw new Exception();
 		}
+		Utils.listSizeVerifier(allTimeRanking);
+		return allTimeRanking.isEmpty() ? new ArrayList<DetectedObject>() : allTimeRanking;
 	}
-*/
+
+	@SuppressWarnings({"unchecked", "deprecation"})
+	@Override
+	public List<DetectedObject> detectedObjectsRankingByYear(int year) throws Exception {
+		Session session = sessionFactory.openSession();
+		Transaction transaction;
+		List<DetectedObject> rankingByYear;
+
+		StringBuilder hql = new StringBuilder("SELECT camera_id, COUNT(*) AS num FROM DetectedObject")
+				.append(" WHERE EXTRACT(YEAR FROM date) = :year")
+				.append(" GROUP BY camera_id")
+				.append(" ORDER BY num DESC");
+
+		rankingByYear = session.createQuery(hql.toString())
+				.setParameter("year",year)
+				.list();
+
+		try {
+			transaction = session.beginTransaction();
+			transaction.commit();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
+			throw new Exception();
+		}
+		Utils.listSizeVerifier(rankingByYear);
+		return rankingByYear;
+	}
+
+	@SuppressWarnings({"unchecked", "deprecation"})
+	@Override
+	public List<DetectedObject> detectedObjectsRankingByYearAndMonth(int year, int month) throws Exception {
+		Session session = sessionFactory.openSession();
+		Transaction transaction;
+		List<DetectedObject> rankingByYearAndMonth;
+
+		StringBuilder hql = new StringBuilder("SELECT camera_id, COUNT(*) AS num FROM DetectedObject");
+		hql.append(" WHERE EXTRACT(YEAR FROM date) = :year")
+				.append(" AND EXTRACT(MONTH FROM date) = :month")
+				.append(" GROUP BY camera_id")
+				.append(" ORDER BY num DESC");
+
+		rankingByYearAndMonth = session.createQuery(hql.toString())
+				.setParameter("year", year)
+				.setParameter("month", month)
+				.list();
+
+		try {
+			transaction = session.beginTransaction();
+			transaction.commit();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
+			throw new Exception();
+		}
+		Utils.listSizeVerifier(rankingByYearAndMonth);
+		return rankingByYearAndMonth;
+	}
+
+	@SuppressWarnings({"unchecked", "deprecation"})
+	@Override
+	public List<DetectedObject> detectedObjectsRankingBetweenDates(Date startDate, Date endDate) throws Exception {
+		Session session = sessionFactory.openSession();
+		Transaction transaction;
+		List<DetectedObject> rankingBetweenDates;
+
+		int startHour, startMinutes, endHour, endMinutes;
+		startHour = startDate.getHours();
+		startMinutes = startDate.getMinutes();
+		endHour = endDate.getHours();
+		endMinutes = endDate.getMinutes();
+
+		String startHourMinutes, endHourMinutes;
+
+		startHourMinutes = String.format("%02d", startHour) + String.format("%02d", startMinutes);
+		endHourMinutes = String.format("%02d", endHour) + String.format("%02d", endMinutes);
+
+		startDate.setHours(0);
+		startDate.setMinutes(0);
+		endDate.setHours(23);
+		endDate.setMinutes(59);
+
+		StringBuilder hql = new StringBuilder("SELECT camera_id, COUNT(*) AS num FROM DetectedObject");
+		hql.append(" WHERE (EXTRACT(HOUR_MINUTE FROM date)) BETWEEN :start_hour_minute AND :end_hour_minute)")
+				.append(" AND date >= :startDate")
+				.append(" AND date <= :endDate")
+				.append(" GROUP BY camera_id")
+				.append(" ORDER BY num DESC");
+
+		rankingBetweenDates = session.createQuery(hql.toString())
+				.setParameter("startDate", startDate)
+				.setParameter("endDate", endDate)
+				.setParameter("start_hour_minute", Integer.parseInt(startHourMinutes))
+				.setParameter("end_hour_minute", Integer.parseInt(endHourMinutes))
+				.list();
+		try {
+			transaction = session.beginTransaction();
+			transaction.commit();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
+			throw new Exception();
+		}
+		return rankingBetweenDates;
+	}
 
 }

@@ -54,4 +54,24 @@ public class DetectedObjectServicesImpl implements DetectedObjectServices {
 			throws Exception {
 		return this.detectedObjectDao.findByDatesBetweenAndCameraId(startDate, endDate, cameraId);
 	}
+
+	@Override
+	public List<DetectedObject> allTimeDetectedObjectsRanking() throws Exception {
+		return this.detectedObjectDao.allTimeDetectedObjectsRanking();
+	}
+
+	@Override
+	public List<DetectedObject> detectedObjectsRankingByYear(int year) throws Exception {
+		return this.detectedObjectDao.detectedObjectsRankingByYear(year);
+	}
+
+	@Override
+	public List<DetectedObject> detectedObjectsRankingByYearAndMonth(int year, int month) throws Exception {
+		return this.detectedObjectDao.detectedObjectsRankingByYearAndMonth(year, month);
+	}
+
+	@Override
+	public List<DetectedObject> detectedObjectsRankingBetweenDates(Date startDate, Date endDate) throws Exception {
+		return this.detectedObjectDao.detectedObjectsRankingBetweenDates(startDate, endDate);
+	}
 }
