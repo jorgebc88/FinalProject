@@ -3,8 +3,7 @@ package com.finalproject.util;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.finalproject.model.DetectedObject;
-import com.finalproject.model.DetectedObjectNorthCache;
-import com.finalproject.model.DetectedObjectSouthCache;
+import com.finalproject.model.DetectedObjectCache;
 import com.finalproject.model.UserSession;
 
 import javax.servlet.http.HttpServletResponse;
@@ -48,18 +47,14 @@ public class Utils {
 		}
 	}
 
-	public static void modifyDetectedObjectCache(DetectedObject detectedObject, DetectedObjectSouthCache detectedObjectSouthCache, DetectedObjectNorthCache detectedObjectNorthCache) {
+	public static void modifyDetectedObjectCache(DetectedObject detectedObject, DetectedObjectCache detectedObjectCache) {
 		String type = detectedObject.getObjectType();
 		String direction = detectedObject.getDirection();
-		if (direction.equals("South")) {
-			detectedObjectSouthCache.incrementValue(type);
-		} else {
-			detectedObjectNorthCache.incrementValue(type);
-		}
+		detectedObjectCache.incrementValue(type);
 	}
 
 	public static <T> void listSizeVerifier(List<T> listOfObjects) {
-		if(listOfObjects.isEmpty()) {
+		if (listOfObjects.isEmpty()) {
 			throw new RuntimeException("No elements were found!");
 		}
 	}

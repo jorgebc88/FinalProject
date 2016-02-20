@@ -29,7 +29,6 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 		session.save(detectedObject);
 		tx.commit();
 		session.close();
-		LOGGER.info("Object saved: " + detectedObject.toString());
 		return true;
 	}
 

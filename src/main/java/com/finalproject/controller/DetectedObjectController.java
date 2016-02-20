@@ -1,7 +1,7 @@
 package com.finalproject.controller;
 
 import com.finalproject.model.DetectedObject;
-import com.finalproject.model.DetectedObjectCacheContainer;
+import com.finalproject.model.DetectedObjectCache;
 import com.finalproject.model.UserSession;
 import com.finalproject.services.DetectedObjectServices;
 import com.finalproject.util.Utils;
@@ -13,10 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/detectedObject")
@@ -26,7 +23,8 @@ public class DetectedObjectController {
 	@Autowired
 	UserSession userSession;
 
-	private Map<Long, DetectedObjectCacheContainer> detectedObjectCacheContainerMap = new HashMap<>();
+	private Map<Long, DetectedObjectCache> detectedObjectCacheMap = new HashMap<>();
+
 
 	static final Logger LOGGER = Logger.getLogger(DetectedObjectController.class);
 
@@ -34,20 +32,18 @@ public class DetectedObjectController {
 	public void newDetectedObject(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 								  @RequestBody String jsonInput) {
 		Utils.addCorsHeader(httpServletResponse);
+		Long newCacheValue;
 		try {
 			// Utils.userVerification(httpServletResponse,
 			// userSession);
 			DetectedObject detectedObject = (DetectedObject) Utils.fromJson(jsonInput,
 					DetectedObject.class);
-			DetectedObjectCacheContainer detectedObjectCacheContainer;
-			if (!detectedObjectCacheContainerMap.containsKey(detectedObject.getCamera_id())) {
-				detectedObjectCacheContainer = new DetectedObjectCacheContainer();
-				detectedObjectCacheContainerMap.put(detectedObject.getCamera_id(), detectedObjectCacheContainer);
-			} else {
-				detectedObjectCacheContainer = detectedObjectCacheContainerMap.get(detectedObject.getCamera_id());
-			}
+			if (!detectedObjectCacheMap.containsKey(detectedObject.getCamera_id())) {
 
-			Utils.modifyDetectedObjectCache(detectedObject, detectedObjectCacheContainer.getDetectedObjectSouthCache(), detectedObjectCacheContainer.getDetectedObjectNorthCache());
+				detectedObjectCacheMap.put(detectedObject.getCamera_id(), new DetectedObjectCache());
+			}
+			Utils.modifyDetectedObjectCache(detectedObject, detectedObjectCacheMap.get(detectedObject.getCamera_id()));
+
 			this.detectedObjectServices.addDetectedObject(detectedObject);
 			String jsonOutput = Utils.toJson(detectedObject);
 
@@ -240,20 +236,33 @@ public class DetectedObjectController {
 	public
 	@ResponseBody
 	String getServerSentEvents(HttpServletResponse httpServletResponse,
-							   @RequestParam("cameraId") int cameraId) {
-		DetectedObjectCacheContainer detectedObjectCacheContainer = detectedObjectCacheContainerMap.get(cameraId);
-		if (detectedObjectCacheContainer == null) {
-			throw new UnsupportedOperationException("Un-existing camera id");
+							   @RequestParam("cameraId") long cameraId){
+		LOGGER.info(cameraId);
+		LOGGER.info("SSE: " + detectedObjectCacheMap.size());
+		DetectedObjectCache cache = detectedObjectCacheMap.get(cameraId);
+		if (cache == null) {
+			httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return null;
 		}
-		LOGGER.info("South: " + Utils.toJson(detectedObjectCacheContainer.getDetectedObjectSouthCache()));
-		LOGGER.info("North: " + Utils.toJson(detectedObjectCacheContainer.getDetectedObjectNorthCache()));
 		StringBuilder data = new StringBuilder("retry: 500\n");
 		data.append("data: {\"detectedObject\":[");
-		data.append(Utils.toJson(detectedObjectCacheContainer.getDetectedObjectSouthCache())).append(",");
-		data.append(Utils.toJson(detectedObjectCacheContainer.getDetectedObjectNorthCache())).append("]}\n\n");
+		data.append(Utils.toJson(cache)).append("]}\n\n");
 		LOGGER.info("Json: " + data.toString());
 
 		return data.toString();
+	}
+
+	@RequestMapping(value = "/resetCache", method = RequestMethod.GET)
+	public
+	@ResponseBody
+	void resetCache(HttpServletResponse httpServletResponse,
+					   @RequestParam("cameraId") long cameraId) {
+		DetectedObjectCache cache = detectedObjectCacheMap.get(cameraId);
+		if (cache == null) {
+			httpServletResponse.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
+		}
+		cache.resetCache();
 	}
 
 }

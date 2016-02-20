@@ -4,7 +4,6 @@ public class DetectedObjectCache {
 	private int car = 0;
 	private int bus = 0;
 	private int bike = 0;
-	private int person = 0;
 
 	public int getCar() {
 		return car;
@@ -37,24 +36,22 @@ public class DetectedObjectCache {
 			car++;
 		} else if (type.equals("Bike")) {
 			bike++;
-		} else if (type.equals("Person")) {
-			person++;
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "DetectedObjectCache{" +
+				"car=" + car +
+				", bus=" + bus +
+				", bike=" + bike +
+				'}';
 	}
 
 	public void resetCache() {
 		bus = 0;
 		car = 0;
 		bike = 0;
-		person = 0;
-	}
-
-	public int getPerson() {
-		return person;
-	}
-
-	public void setPerson(int person) {
-		this.person = person;
 	}
 
 }
