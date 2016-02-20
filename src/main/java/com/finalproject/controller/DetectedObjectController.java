@@ -256,4 +256,93 @@ public class DetectedObjectController {
 		return data.toString();
 	}
 
+	@RequestMapping(value = "/allTimeRanking", method = RequestMethod.GET)
+	public
+	@ResponseBody
+	List<DetectedObject> getAllTimeDetectedObjectsRanking(HttpServletResponse httpServletResponse) {
+		Utils.addCorsHeader(httpServletResponse);
+		try {
+			List<DetectedObject> allTimeRanking = this.detectedObjectServices.allTimeDetectedObjectsRanking();
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return allTimeRanking;
+		} catch (IllegalAccessException e) {
+			LOGGER.info("Trying to request info without logging!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		} catch (Exception e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
+		}
+	}
+
+	@RequestMapping(value = "/rankingByYear", method = RequestMethod.GET)
+	public
+	@ResponseBody
+	List<DetectedObject> getDetectedObjectsRankingByYear(HttpServletResponse httpServletResponse,
+	                                                     @RequestParam("year") int year) {
+		Utils.addCorsHeader(httpServletResponse);
+		try {
+			List<DetectedObject> rankingByYear = this.detectedObjectServices.detectedObjectsRankingByYear(year);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return rankingByYear;
+		} catch (IllegalAccessException e) {
+			LOGGER.info("Trying to request info without logging!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+			return null;
+		} catch (Exception e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
+		}
+	}
+
+	@RequestMapping(value = "/rankingByYearAndMonth", method = RequestMethod.GET)
+	public
+	@ResponseBody
+	List<DetectedObject> getDetectedObjectsRankingByYearAndMonth(HttpServletResponse httpServletResponse,
+	                                                             @RequestParam("year") int year,
+	                                                             @RequestParam("month") int month) {
+		Utils.addCorsHeader(httpServletResponse);
+		try {
+			List<DetectedObject> rankingByYearAndMonth = this.detectedObjectServices.detectedObjectsRankingByYearAndMonth(year, month);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return rankingByYearAndMonth;
+		} catch (IllegalAccessException e) {
+			LOGGER.info("Trying to request info without logging!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		} catch (Exception e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
+		}
+	}
+
+	@RequestMapping(value = "/rankingBetweenDates", method = RequestMethod.GET)
+	public
+	@ResponseBody
+	List<DetectedObject> getDetectedObjectsRankingBetweenDates(HttpServletResponse httpServletResponse,
+	                                                           @RequestParam("startDate") Date startDate,
+	                                                           @RequestParam("endDate") Date endDate) {
+		Utils.addCorsHeader(httpServletResponse);
+		try {
+			List<DetectedObject> rankingByYearAndMonth = this.detectedObjectServices.detectedObjectsRankingBetweenDates(startDate, endDate);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return rankingByYearAndMonth;
+		} catch (IllegalAccessException e) {
+			LOGGER.info("Trying to request info without logging!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		} catch (Exception e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
+		}
+	}
+
 }

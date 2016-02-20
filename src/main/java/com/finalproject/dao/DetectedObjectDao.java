@@ -6,19 +6,27 @@ import java.util.Date;
 import java.util.List;
 
 public interface DetectedObjectDao {
-	public boolean addDetectedObject(DetectedObject detectedObject) throws Exception;
+	boolean addDetectedObject(DetectedObject detectedObject) throws Exception;
 
-	public List<DetectedObject> getDetectedObjectList() throws Exception;
+	List<DetectedObject> getDetectedObjectList() throws Exception;
 
-	public List<DetectedObject> getDetectedObjectListByCameraId(long cameraId);
+	List<DetectedObject> getDetectedObjectListByCameraId(long cameraId);
 
 	boolean deleteDetectedObjectBeforeDateByCameraId(Date date, long cameraId) throws Exception;
 
-	public List<DetectedObject> findByDateAndCameraId(Date date, long cameraId) throws Exception;
+	List<DetectedObject> findByDateAndCameraId(Date date, long cameraId) throws Exception;
 
-	public List<DetectedObject> findByMonthAndCameraId(int month, long cameraId) throws Exception;
+	List<DetectedObject> findByMonthAndCameraId(int month, long cameraId) throws Exception;
 
-	public List<DetectedObject> findByYearAndCameraId(int Year, long cameraId) throws Exception;
+	List<DetectedObject> findByYearAndCameraId(int Year, long cameraId) throws Exception;
 
-	public List<DetectedObject> findByDatesBetweenAndCameraId(Date startDate, Date endDate, long cameraId) throws Exception;
+	List<DetectedObject> findByDatesBetweenAndCameraId(Date startDate, Date endDate, long cameraId) throws Exception;
+
+	List<DetectedObject> allTimeDetectedObjectsRanking() throws Exception;
+
+	List<DetectedObject> detectedObjectsRankingByYear(int year) throws Exception;
+
+	List<DetectedObject> detectedObjectsRankingByYearAndMonth(int year, int month) throws Exception;
+
+	List<DetectedObject> detectedObjectsRankingBetweenDates(Date startDate, Date endDate) throws Exception;
 }
