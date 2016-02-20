@@ -3,7 +3,7 @@ package com.finalproject.controller;
 import com.finalproject.model.Camera;
 import com.finalproject.model.UserSession;
 import com.finalproject.services.CameraServices;
-import com.finalproject.util.FinalProjectUtil;
+import com.finalproject.util.Utils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,17 +34,17 @@ public class CameraController {
 	@RequestMapping(value = "/newCamera", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public void newCamera(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 						  @RequestBody String jsonInput) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
-			Camera camera = (Camera) FinalProjectUtil.fromJson(jsonInput, Camera.class);
+			Camera camera = (Camera) Utils.fromJson(jsonInput, Camera.class);
 			if (this.cameraServices.addCamera(camera)) {
 				httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			} else {
 				httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
-			String jsonOutput = FinalProjectUtil.toJson(camera);
+			String jsonOutput = Utils.toJson(camera);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			httpServletResponse.setContentType("application/json; charset=UTF-8");
 			httpServletResponse.getWriter().println(jsonOutput);
@@ -66,10 +66,10 @@ public class CameraController {
 	public
 	@ResponseBody
 	Camera getCamera(HttpServletResponse httpServletResponse, @PathVariable("id") long id) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		Camera camera = null;
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
 			camera = cameraServices.getCameraById(id);
 			System.out.println(camera.toString());
@@ -88,10 +88,10 @@ public class CameraController {
 	public
 	@ResponseBody
 	List<Camera> getCameraList(HttpServletResponse httpServletResponse) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		List<Camera> cameraList = null;
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
 			cameraList = cameraServices.getCameraList();
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -109,9 +109,9 @@ public class CameraController {
 	public
 	@ResponseBody
 	boolean deleteCamera(HttpServletResponse httpServletResponse, @PathVariable("id") long id) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			return cameraServices.deleteCamera(id);
@@ -131,9 +131,9 @@ public class CameraController {
 	boolean modifyCamera(HttpServletResponse httpServletResponse,
 						 @RequestParam("id") long id,
 						 @RequestParam("active") boolean active) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			return cameraServices.modifyCamera(id, active);

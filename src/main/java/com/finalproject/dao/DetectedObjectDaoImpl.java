@@ -1,6 +1,7 @@
 package com.finalproject.dao;
 
 import com.finalproject.model.DetectedObject;
+import com.finalproject.util.Utils;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,7 +9,6 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,11 +42,12 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.list();
 		tx.commit();
 		session.close();
-		listSizeVerifier(detectedObjectList);
+		Utils.listSizeVerifier(detectedObjectList);
 
 		return detectedObjectList;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<DetectedObject> getDetectedObjectListByCameraId(long cameraId) {
 		Session session = sessionFactory.openSession();
@@ -56,7 +57,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.list();
 		session.flush();
 		session.close();
-		listSizeVerifier(detectedObjectList);
+		Utils.listSizeVerifier(detectedObjectList);
 		return detectedObjectList;
 	}
 
@@ -71,7 +72,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.list();
 		session.flush();
 		session.close();
-		listSizeVerifier(detectedObjectList);
+		Utils.listSizeVerifier(detectedObjectList);
 		return true;
 	}
 
@@ -98,7 +99,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.list();
 		tx.commit();
 		session.close();
-		listSizeVerifier(detectedObjectList);
+		Utils.listSizeVerifier(detectedObjectList);
 		return detectedObjectList;
 	}
 
@@ -113,7 +114,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.list();
 		tx.commit();
 		session.close();
-		listSizeVerifier(detectedObjectList);
+		Utils.listSizeVerifier(detectedObjectList);
 		return detectedObjectList;
 	}
 
@@ -128,7 +129,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.list();
 		tx.commit();
 		session.close();
-		listSizeVerifier(detectedObjectList);
+		Utils.listSizeVerifier(detectedObjectList);
 		return detectedObjectList;
 	}
 
@@ -147,7 +148,6 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 
 		startHourMinutes = String.format("%02d", startHour) + String.format("%02d", startMinutes);
 		endHourMinutes = String.format("%02d", endHour) + String.format("%02d", endMinutes);
-		;
 
 		startDate.setHours(0);
 		startDate.setMinutes(0);
@@ -168,15 +168,16 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 		session.close();
 
 		LOGGER.info("Number of detected objects: " + detectedObjectList.size());
-		listSizeVerifier(detectedObjectList);
+		Utils.listSizeVerifier(detectedObjectList);
 		return detectedObjectList;
 	}
 
+	/*
 	private void listSizeVerifier(List<DetectedObject> detectedObjectList) {
 		if(detectedObjectList.size() == 0){
 			throw new RuntimeException("No elements were found!");
 		}
 	}
-
+*/
 
 }
