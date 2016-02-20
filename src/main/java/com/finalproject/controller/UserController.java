@@ -3,7 +3,7 @@ package com.finalproject.controller;
 import com.finalproject.model.User;
 import com.finalproject.model.UserSession;
 import com.finalproject.services.UserServices;
-import com.finalproject.util.FinalProjectUtil;
+import com.finalproject.util.Utils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,15 +34,15 @@ public class UserController {
 	@RequestMapping(value = "/newUser", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public void newUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 						@RequestBody String jsonInput) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
-			User user = (User) FinalProjectUtil.fromJson(jsonInput, User.class);
+			User user = (User) Utils.fromJson(jsonInput, User.class);
 			this.userServices.addUser(user);
 			LOGGER.info("New user created: " + user.toString());
 
-			String jsonOutput = FinalProjectUtil.toJson(user);
+			String jsonOutput = Utils.toJson(user);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			httpServletResponse.setContentType("application/json; charset=UTF-8");
 			httpServletResponse.getWriter().println(jsonOutput);
@@ -69,8 +69,8 @@ public class UserController {
 	@ResponseBody
 	User login(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 			   @RequestBody String jsonEntrada) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
-		User user = (User) FinalProjectUtil.fromJson(jsonEntrada, User.class);
+		Utils.addCorsHeader(httpServletResponse);
+		User user = (User) Utils.fromJson(jsonEntrada, User.class);
 		if (userSession.getUser() != null) {
 			LOGGER.info("User: " + userSession.getUser().getUserName() + " is already logged!");
 			return user;
@@ -102,7 +102,7 @@ public class UserController {
 	public
 	@ResponseBody
 	User logout(HttpServletResponse httpServletResponse) throws Exception {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		User user = null;
 		if (userSession.getUser() != null) {
 			LOGGER.info("User " + userSession.getUser().getUserName() + " logout successfully!");
@@ -119,10 +119,10 @@ public class UserController {
 	public
 	@ResponseBody
 	User getUser(HttpServletResponse httpServletResponse, @PathVariable("id") long id) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		User user = null;
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
 			user = userServices.getUserById(id);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -140,10 +140,10 @@ public class UserController {
 	public
 	@ResponseBody
 	List<User> getUsers(HttpServletResponse httpServletResponse) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		List<User> userList = null;
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
 			userList = userServices.getUserList();
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -161,9 +161,9 @@ public class UserController {
 	public
 	@ResponseBody
 	boolean deleteUser(HttpServletResponse httpServletResponse, @PathVariable("id") long id) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			return userServices.deleteUser(id);

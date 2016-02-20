@@ -9,8 +9,9 @@ import com.finalproject.model.UserSession;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
-public class FinalProjectUtil {
+public class Utils {
 
 	public static void addCorsHeader(HttpServletResponse response) {
 		// TODO: externalize the Allow-Origin
@@ -54,6 +55,12 @@ public class FinalProjectUtil {
 			detectedObjectSouthCache.incrementValue(type);
 		} else {
 			detectedObjectNorthCache.incrementValue(type);
+		}
+	}
+
+	public static <T> void listSizeVerifier(List<T> listOfObjects) {
+		if(listOfObjects.isEmpty()) {
+			throw new RuntimeException("No elements were found!");
 		}
 	}
 

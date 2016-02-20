@@ -4,7 +4,7 @@ import com.finalproject.model.DetectedObject;
 import com.finalproject.model.DetectedObjectCacheContainer;
 import com.finalproject.model.UserSession;
 import com.finalproject.services.DetectedObjectServices;
-import com.finalproject.util.FinalProjectUtil;
+import com.finalproject.util.Utils;
 import org.apache.log4j.Logger;
 import org.glassfish.jersey.media.sse.SseFeature;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +33,11 @@ public class DetectedObjectController {
 	@RequestMapping(value = "/DetectedObject", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public void newDetectedObject(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 								  @RequestBody String jsonInput) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
-			DetectedObject detectedObject = (DetectedObject) FinalProjectUtil.fromJson(jsonInput,
+			DetectedObject detectedObject = (DetectedObject) Utils.fromJson(jsonInput,
 					DetectedObject.class);
 			DetectedObjectCacheContainer detectedObjectCacheContainer;
 			if (!detectedObjectCacheContainerMap.containsKey(detectedObject.getCamera_id())) {
@@ -47,9 +47,9 @@ public class DetectedObjectController {
 				detectedObjectCacheContainer = detectedObjectCacheContainerMap.get(detectedObject.getCamera_id());
 			}
 
-			FinalProjectUtil.modifyDetectedObjectCache(detectedObject, detectedObjectCacheContainer.getDetectedObjectSouthCache(), detectedObjectCacheContainer.getDetectedObjectNorthCache());
+			Utils.modifyDetectedObjectCache(detectedObject, detectedObjectCacheContainer.getDetectedObjectSouthCache(), detectedObjectCacheContainer.getDetectedObjectNorthCache());
 			this.detectedObjectServices.addDetectedObject(detectedObject);
-			String jsonOutput = FinalProjectUtil.toJson(detectedObject);
+			String jsonOutput = Utils.toJson(detectedObject);
 
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			httpServletResponse.setContentType("application/json; charset=UTF-8");
@@ -66,9 +66,9 @@ public class DetectedObjectController {
 	public
 	@ResponseBody
 	List<DetectedObject> getDetectedObjects(HttpServletResponse httpServletResponse) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
 			List<DetectedObject> detectedObjectList = this.detectedObjectServices.getDetectedObjectList();
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -90,9 +90,9 @@ public class DetectedObjectController {
 	@ResponseBody
 	List<DetectedObject> getDetectedObjectByCameraId(HttpServletResponse httpServletResponse,
 													 @RequestParam("cameraId") long cameraId) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
 			List<DetectedObject> detectedObjectList = this.detectedObjectServices.getDetectedObjectListByCameraId(cameraId);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -118,9 +118,9 @@ public class DetectedObjectController {
 	List<DetectedObject> getDetectedObjectsByDateAndCameraId(HttpServletResponse httpServletResponse,
 															 @RequestParam("date") Date date,
 															 @RequestParam("cameraId") long cameraId) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
 			List<DetectedObject> detectedObjectList = this.detectedObjectServices.findByDateAndCameraId(date, cameraId);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -146,9 +146,9 @@ public class DetectedObjectController {
 	List<DetectedObject> getDetectedObjectsByMonthAndCameraId(HttpServletResponse httpServletResponse,
 															  @RequestParam("month") int month,
 															  @RequestParam("cameraId") long cameraId) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
 			List<DetectedObject> detectedObjectList = this.detectedObjectServices.findByMonthAndCameraId(month, cameraId);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -170,9 +170,9 @@ public class DetectedObjectController {
 	List<DetectedObject> getDetectedObjectsByYearAndCameraId(HttpServletResponse httpServletResponse,
 															 @RequestParam("year") int year,
 															 @RequestParam("cameraId") long cameraId) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
 			List<DetectedObject> detectedObjectList = this.detectedObjectServices.findByYearAndCameraId(year, cameraId);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -194,9 +194,9 @@ public class DetectedObjectController {
 	List<DetectedObject> getDetectedObjectsByDatesBetweenAndCameraId(HttpServletResponse httpServletResponse,
 																	 @RequestParam("startDate") Date startDate, @RequestParam("endDate") Date endDate,
 																	 @RequestParam("cameraId") long cameraId) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
 			List<DetectedObject> detectedObjectList = this.detectedObjectServices.findByDatesBetweenAndCameraId(startDate, endDate, cameraId);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -218,9 +218,9 @@ public class DetectedObjectController {
 	boolean deleteDetectedObjectBeforeDateByCameraId(HttpServletResponse httpServletResponse,
 													 @RequestParam("date") Date date,
 													 @RequestParam("cameraId") long cameraId) {
-		FinalProjectUtil.addCorsHeader(httpServletResponse);
+		Utils.addCorsHeader(httpServletResponse);
 		try {
-			// FinalProjectUtil.userVerification(httpServletResponse,
+			// Utils.userVerification(httpServletResponse,
 			// userSession);
 			boolean deleteSuccessful = this.detectedObjectServices.deleteDetectedObjectBeforeDateByCameraId(date, cameraId);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
@@ -245,12 +245,12 @@ public class DetectedObjectController {
 		if (detectedObjectCacheContainer == null) {
 			throw new UnsupportedOperationException("Un-existing camera id");
 		}
-		LOGGER.info("South: " + FinalProjectUtil.toJson(detectedObjectCacheContainer.getDetectedObjectSouthCache()));
-		LOGGER.info("North: " + FinalProjectUtil.toJson(detectedObjectCacheContainer.getDetectedObjectNorthCache()));
+		LOGGER.info("South: " + Utils.toJson(detectedObjectCacheContainer.getDetectedObjectSouthCache()));
+		LOGGER.info("North: " + Utils.toJson(detectedObjectCacheContainer.getDetectedObjectNorthCache()));
 		StringBuilder data = new StringBuilder("retry: 500\n");
 		data.append("data: {\"detectedObject\":[");
-		data.append(FinalProjectUtil.toJson(detectedObjectCacheContainer.getDetectedObjectSouthCache())).append(",");
-		data.append(FinalProjectUtil.toJson(detectedObjectCacheContainer.getDetectedObjectNorthCache())).append("]}\n\n");
+		data.append(Utils.toJson(detectedObjectCacheContainer.getDetectedObjectSouthCache())).append(",");
+		data.append(Utils.toJson(detectedObjectCacheContainer.getDetectedObjectNorthCache())).append("]}\n\n");
 		LOGGER.info("Json: " + data.toString());
 
 		return data.toString();
