@@ -20,18 +20,18 @@ public class CameraDaoImpl implements CameraDao {
 	@Autowired
 	SessionFactory sessionFactory;
 
-	Transaction transaction = null;
 
 	static final Logger LOGGER = Logger.getLogger(CameraDaoImpl.class);
 
 	@Override
 	public boolean addCamera(Camera camera) throws Exception {
 		Session session = sessionFactory.openSession();
+		Transaction transaction;
 
 		try {
-			this.transaction = session.beginTransaction();
+			transaction = session.beginTransaction();
 			session.save(camera);
-			this.transaction.commit();
+			transaction.commit();
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.close();
@@ -46,12 +46,13 @@ public class CameraDaoImpl implements CameraDao {
 	@Override
 	public Camera getCameraById(long id) throws Exception {
 		Session session = sessionFactory.openSession();
+		Transaction transaction;
 		Camera camera = null;
 
 		try {
-			this.transaction = session.beginTransaction();
+			transaction = session.beginTransaction();
 			camera = (Camera) session.get(Camera.class, id);
-			this.transaction.commit();
+			transaction.commit();
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.flush();
@@ -65,12 +66,13 @@ public class CameraDaoImpl implements CameraDao {
 	@Override
 	public List<Camera> getCameraList() throws Exception {
 		Session session = sessionFactory.openSession();
+		Transaction transaction;
 		List<Camera> cameraList = null;
 
 		try {
-			this.transaction = session.beginTransaction();
+			transaction = session.beginTransaction();
 			cameraList = session.createCriteria(Camera.class).list();
-			this.transaction.commit();
+			transaction.commit();
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.close();
@@ -82,6 +84,7 @@ public class CameraDaoImpl implements CameraDao {
 	@Override
 	public boolean deleteCamera(long id) throws Exception {
 		Session session = sessionFactory.openSession();
+		Transaction transaction;
 
 		Camera o = (Camera) session.load(Camera.class, id);
 		session.delete(o);
@@ -93,13 +96,14 @@ public class CameraDaoImpl implements CameraDao {
 	@Override
 	public boolean modifyCamera(long id, boolean active) throws Exception {
 		Session session = sessionFactory.openSession();
+		Transaction transaction;
 
 		try {
-			this.transaction = session.beginTransaction();
+			transaction = session.beginTransaction();
 			Camera camera =	(Camera) session.get(Camera.class, id);
 			camera.setActive(active);
 			session.update(camera);
-			this.transaction.commit();
+			transaction.commit();
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.close();
@@ -112,13 +116,14 @@ public class CameraDaoImpl implements CameraDao {
 	@Override
 	public List<Camera> getCameraRankingAllTime() throws Exception {
 		Session session = sessionFactory.openSession();
+		Transaction transaction;
 		List<Camera> allTimeRanking;
 		StringBuilder hql = new StringBuilder("SELECT c.id, COUNT(*) num FROM camera c JOIN detected_object d ON c.id = d.camera_id GROUP BY c.id ORDER BY num DESC");
 		allTimeRanking = session.createQuery(hql.toString()).list();
 
 		try {
-			this.transaction = session.beginTransaction();
-			this.transaction.commit();
+			transaction = session.beginTransaction();
+			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
 			session.close();
@@ -132,6 +137,7 @@ public class CameraDaoImpl implements CameraDao {
 	@Override
 	public List<Camera> getCameraRankingByYear(Date year) throws Exception {
 		Session session = sessionFactory.openSession();
+		Transaction transaction;
 		List<Camera> rankingByYear;
 		StringBuilder hql = new StringBuilder("SELECT c.id, COUNT(*) num FROM camera c JOIN detected_object d ON c.id = d.camera_id WHERE EXTRACT(YEAR FROM d.date) = :year  GROUP BY c.id ORDER BY num DESC");
 		rankingByYear = session.createQuery(hql.toString())
@@ -139,8 +145,8 @@ public class CameraDaoImpl implements CameraDao {
 				.list();
 
 		try {
-			this.transaction = session.beginTransaction();
-			this.transaction.commit();
+			transaction = session.beginTransaction();
+			transaction.commit();
 		} catch (HibernateException e) {
 			e.printStackTrace();
 			session.close();
