@@ -34,8 +34,10 @@ public class CameraDaoImpl implements CameraDao {
 			this.transaction.commit();
 		} catch (HibernateException e) {
 			e.printStackTrace();
-		} finally {
 			session.close();
+			throw new Exception();
+		} finally {
+
 		}
 		LOGGER.info("Camara guardada: " + camera.toString());
 		return true;
@@ -52,9 +54,9 @@ public class CameraDaoImpl implements CameraDao {
 			this.transaction.commit();
 		} catch (HibernateException e) {
 			e.printStackTrace();
-		} finally {
 			session.flush();
 			session.close();
+			throw new Exception();
 		}
 		return camera;
 	}
@@ -71,8 +73,8 @@ public class CameraDaoImpl implements CameraDao {
 			this.transaction.commit();
 		} catch (HibernateException e) {
 			e.printStackTrace();
-		} finally {
 			session.close();
+			throw new Exception();
 		}
 		return cameraList;
 	}
@@ -100,8 +102,8 @@ public class CameraDaoImpl implements CameraDao {
 			this.transaction.commit();
 		} catch (HibernateException e) {
 			e.printStackTrace();
-		} finally {
 			session.close();
+			throw new Exception();
 		}
 		return true;
 	}
@@ -119,10 +121,9 @@ public class CameraDaoImpl implements CameraDao {
 			this.transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
 			session.close();
+			throw new Exception();
 		}
-
 		Utils.listSizeVerifier(allTimeRanking);
 		return allTimeRanking.isEmpty() ? new ArrayList<Camera>() : allTimeRanking;
 	}
@@ -142,10 +143,9 @@ public class CameraDaoImpl implements CameraDao {
 			this.transaction.commit();
 		} catch (HibernateException e) {
 			e.printStackTrace();
-		} finally {
 			session.close();
+			throw new Exception();
 		}
-
 		Utils.listSizeVerifier(rankingByYear);
 		return rankingByYear;
 	}

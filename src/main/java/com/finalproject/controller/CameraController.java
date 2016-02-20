@@ -78,7 +78,6 @@ public class CameraController {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch (Exception e) {
-			LOGGER.info("Error found: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return camera;
@@ -99,7 +98,6 @@ public class CameraController {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch (Exception e) {
-			LOGGER.info("Error found: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return cameraList;
@@ -119,7 +117,6 @@ public class CameraController {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch (Exception e) {
-			LOGGER.info("Error found: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return false;
@@ -141,7 +138,6 @@ public class CameraController {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		} catch (Exception e) {
-			LOGGER.info("Error found: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		return false;
