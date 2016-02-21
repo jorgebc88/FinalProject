@@ -35,6 +35,8 @@ public class Camera implements Serializable {
 	@Column(name = "active")
 	private boolean active;
 
+	@Column(name = "pointing_at")
+	private String pointingAt;
 
 	public Camera() {
 	}
@@ -44,7 +46,7 @@ public class Camera implements Serializable {
 		this.location = location;
 	}
 
-	public Camera(Long id, String location, String latitude, String longitude, String ip, boolean active) {
+	public Camera(Long id, String location, String latitude, String longitude, String ip, boolean active, String pointingAt) {
 		super();
 		this.id = id;
 		this.location = location;
@@ -52,6 +54,7 @@ public class Camera implements Serializable {
 		this.longitude = longitude;
 		this.ip = ip;
 		this.active = active;
+		this.pointingAt = PointingAt.getPointingAt(pointingAt);
 	}
 
 	public void setId(Long id) {
@@ -102,9 +105,24 @@ public class Camera implements Serializable {
 		this.active = active;
 	}
 
+	public String getPointingAt() {
+		return pointingAt;
+	}
+
+	public void setPointingAt(String pointingAt) {
+		this.pointingAt = pointingAt;
+	}
+
 	@Override
 	public String toString() {
-		return "Camera [id=" + id + ", location=" + location + ", latitude=" + latitude + ", longitude=" + longitude
-				+ ", ip=" + ip + "]";
+		return "Camera{" +
+				"id=" + id +
+				", location='" + location + '\'' +
+				", latitude='" + latitude + '\'' +
+				", longitude='" + longitude + '\'' +
+				", ip='" + ip + '\'' +
+				", active=" + active +
+				", pointingAt='" + pointingAt + '\'' +
+				'}';
 	}
 }
