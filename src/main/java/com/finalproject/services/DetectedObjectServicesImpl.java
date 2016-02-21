@@ -55,6 +55,8 @@ public class DetectedObjectServicesImpl implements DetectedObjectServices {
 		return this.detectedObjectDao.findByDatesBetweenAndCameraId(startDate, endDate, cameraId);
 	}
 
+//------------------------------------------   RANKINGS   ------------------------------------------
+
 	@Override
 	public List<DetectedObject> allTimeDetectedObjectsRanking() throws Exception {
 		return this.detectedObjectDao.allTimeDetectedObjectsRanking();
@@ -75,13 +77,25 @@ public class DetectedObjectServicesImpl implements DetectedObjectServices {
 		return this.detectedObjectDao.detectedObjectsRankingBetweenDates(startDate, endDate);
 	}
 
-	@Override
-	public List<DetectedObject> getByHoursOfDayDetectedObjectsHistogram(int dayOfTheWeek) throws Exception {
-		return this.detectedObjectDao.getByHoursOfDayDetectedObjectsHistogram(dayOfTheWeek);
-	}
+//------------------------------------------ Stats sorted by maximum values by camera ------------------------------------------
 
 	@Override
 	public List<DetectedObject> getPeakHoursByDaysOfTheWeekAndCamera(long cameraId) throws Exception {
 		return this.detectedObjectDao.getPeakHoursByDaysOfTheWeekAndCamera(cameraId);
+	}
+
+	@Override
+	public List<DetectedObject> getByHoursOfDayDetectedObjectsHistogram(int dayOfTheWeek, long camera_id) throws Exception {
+		return this.detectedObjectDao.getByHoursOfDayDetectedObjectsHistogram(dayOfTheWeek, camera_id);
+	}
+
+	@Override
+	public List<DetectedObject> getByDayOfTheWeekDetectedObjectsHistogram(long camera_id) throws Exception {
+		return this.detectedObjectDao.getByDayOfTheWeekDetectedObjectsHistogram(camera_id);
+	}
+
+	@Override
+	public List<DetectedObject> getByMonthOfTheYearDetectedObjectsHistogram(long cameraId) throws Exception {
+		return this.detectedObjectDao.getByMonthOfTheYearDetectedObjectsHistogram(cameraId);
 	}
 }

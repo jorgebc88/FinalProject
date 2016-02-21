@@ -175,6 +175,8 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 		return detectedObjectList;
 	}
 
+
+//----------------------------------------------------------------RANKINKGS --------------------------------------------------------------------------
 	@SuppressWarnings({"unchecked", "deprecation"})
 	@Override
 	public List<DetectedObject> allTimeDetectedObjectsRanking() throws Exception {
@@ -303,34 +305,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 		return rankingBetweenDates;
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<DetectedObject> getByHoursOfDayDetectedObjectsHistogram(int dayOfTheWeek) throws Exception {
-		Session session = sessionFactory.openSession();
-		Transaction transaction;
-		List<DetectedObject> byHoursHistogram;
-
-		StringBuilder hql = new StringBuilder("SELECT EXTRACT(HOUR FROM date), COUNT(*) AS num FROM DetectedObject")
-				.append(" WHERE DAYOFWEEK(date) = :dayOfTheWeek")
-				.append(" GROUP BY ( EXTRACT(HOUR FROM date) )")
-				.append(" ORDER BY num DESC");
-
-		byHoursHistogram = session.createQuery(hql.toString())
-				.setParameter("dayOfTheWeek",dayOfTheWeek)
-				.list();
-
-		try {
-			transaction = session.beginTransaction();
-			transaction.commit();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			session.close();
-			throw new Exception();
-		}
-		Utils.listSizeVerifier(byHoursHistogram);
-		return byHoursHistogram;
-	}
-
+//------------------------------------------ Stats sorted by maximum values by camera ------------------------------------------
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -339,13 +314,10 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 		Transaction transaction;
 		List<DetectedObject> peakHours;
 
-		StringBuilder hql = new StringBuilder("SELECT DISTINCT camera_id, days, hours, MAX(CANT) AS PeakHour FROM")
-				.append(" (SELECT d.camera_id, dayofweek(d.date) AS days, HOUR(d.date) AS hours ,COUNT(*) AS CANT FROM detected_object AS d group by hours order by CANT DESC) AS RESULT")
-				.append(" WHERE camera_id = :camera_id")
-				.append(" GROUP BY days")
-				.append(" ORDER BY PeakHour DESC");
-
-		LOGGER.info(hql.toString());
+		StringBuilder hql = new StringBuilder("SELECT DISTINCT days, hours, MAX(cant) FROM")
+				.append(" (SELECT d.camera_id, dayofweek(d.date) AS days, HOUR(d.date) AS hours ,COUNT(*)")
+				.append(" AS CANT FROM detected_object AS d  where camera_id = :camera_id group by days,hours order by days,CANT DESC)")
+				.append(" AS RESULT GROUP BY days");
 
 		peakHours = session.createSQLQuery(hql.toString())
 				.setParameter("camera_id", cameraId)
@@ -363,5 +335,79 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 		return peakHours;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DetectedObject> getByHoursOfDayDetectedObjectsHistogram(int dayOfTheWeek, long camera_id) throws Exception {
+		Session session = sessionFactory.openSession();
+		Transaction transaction;
+		List<DetectedObject> byHoursHistogram;
+
+		StringBuilder hql = new StringBuilder("SELECT EXTRACT(HOUR FROM date), COUNT(*) AS num FROM DetectedObject")
+				.append(" WHERE DAYOFWEEK(date) = :dayOfTheWeek")
+				.append(" AND camera_id = :camera_id")
+				.append(" GROUP BY ( EXTRACT(HOUR FROM date) )");
+
+		byHoursHistogram = session.createQuery(hql.toString())
+				.setParameter("dayOfTheWeek", dayOfTheWeek)
+				.setParameter("camera_id", camera_id)
+				.list();
+
+		try {
+			transaction = session.beginTransaction();
+			transaction.commit();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
+			throw new Exception();
+		}
+		Utils.listSizeVerifier(byHoursHistogram);
+		return byHoursHistogram;
+	}
+
+	@Override
+	public List<DetectedObject> getByDayOfTheWeekDetectedObjectsHistogram(long cameraId) throws Exception {
+		Session session = sessionFactory.openSession();
+		Transaction transaction;
+		List<DetectedObject> ByDayOfTheWeekDetectedObjectsHistogram;
+
+		StringBuilder hql = new StringBuilder("SELECT dayofweek(d.date)	AS days ,COUNT(*) AS CANT FROM detected_object AS d WHERE camera_id = :camera_id group by days" );
+
+		ByDayOfTheWeekDetectedObjectsHistogram = session.createSQLQuery(hql.toString())
+				.setParameter("camera_id", cameraId)
+				.list();
+
+		try {
+			transaction = session.beginTransaction();
+			transaction.commit();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
+			throw new Exception();
+		}
+		Utils.listSizeVerifier(ByDayOfTheWeekDetectedObjectsHistogram);
+		return ByDayOfTheWeekDetectedObjectsHistogram;	}
+
+	@Override
+	public List<DetectedObject> getByMonthOfTheYearDetectedObjectsHistogram(long cameraId) throws Exception {
+		Session session = sessionFactory.openSession();
+		Transaction transaction;
+		List<DetectedObject> ByMonthOfTheYearDetectedObjectsHistogram;
+
+		StringBuilder hql = new StringBuilder("SELECT MONTH(d.date) AS months ,COUNT(*) AS CANT FROM detected_object AS d WHERE camera_id = :camera_id group by months");
+
+		ByMonthOfTheYearDetectedObjectsHistogram = session.createSQLQuery(hql.toString())
+				.setParameter("camera_id", cameraId)
+				.list();
+
+		try {
+			transaction = session.beginTransaction();
+			transaction.commit();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
+			throw new Exception();
+		}
+		Utils.listSizeVerifier(ByMonthOfTheYearDetectedObjectsHistogram);
+		return ByMonthOfTheYearDetectedObjectsHistogram;	}
 
 }

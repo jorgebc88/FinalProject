@@ -22,6 +22,8 @@ public interface DetectedObjectServices {
 
 	List<DetectedObject> findByDatesBetweenAndCameraId(Date startDate, Date endDate, long cameraId) throws Exception;
 
+//------------------------------------------   RANKINGS   ------------------------------------------
+
 	List<DetectedObject> allTimeDetectedObjectsRanking() throws Exception;
 
 	List<DetectedObject> detectedObjectsRankingByYear(int year) throws Exception;
@@ -30,7 +32,15 @@ public interface DetectedObjectServices {
 
 	List<DetectedObject> detectedObjectsRankingBetweenDates(Date startDate, Date endDate) throws Exception;
 
-	List<DetectedObject> getByHoursOfDayDetectedObjectsHistogram(int dayOfTheWeek) throws Exception;
+//------------------------------------------ Stats sorted by maximum values by camera ------------------------------------------
 
 	List<DetectedObject> getPeakHoursByDaysOfTheWeekAndCamera(long cameraId) throws Exception;
+
+	List<DetectedObject> getByHoursOfDayDetectedObjectsHistogram(int dayOfTheWeek, long camera_id) throws Exception;
+
+	List<DetectedObject> getByDayOfTheWeekDetectedObjectsHistogram(long cameraId) throws Exception;
+
+	List<DetectedObject> getByMonthOfTheYearDetectedObjectsHistogram(long cameraId) throws Exception;
+
+
 }

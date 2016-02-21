@@ -40,8 +40,7 @@ public class DetectedObjectController {
 	static final Logger LOGGER = Logger.getLogger(DetectedObjectController.class);
 
 	/**
-	 * Creates a new detectedObject for the system
-	 *
+	 * Provides the service required to create a new detectedObject for the system
 	 * @param httpServletRequest The httpServletRequest
 	 * @param httpServletResponse The httpServletResponse
 	 * @param jsonInput The detected object converted to json
@@ -76,7 +75,6 @@ public class DetectedObjectController {
 
 	/**
 	 * Provides the service required to retrieve all the detectedObjects from the dataBase
-	 *
 	 * @param httpServletResponse The httpServletResponse
 	 * @return The detectedObject list for all cameras
 	 */
@@ -104,7 +102,6 @@ public class DetectedObjectController {
 
 	/**
 	 * Provides the service required to retrieve all the detectedObjects for a specific camera from the dataBase according to the camera ID
-	 *
 	 * @param httpServletResponse The httpServletResponse
 	 * @param cameraId The id of the camera we want
 	 * @return The detectedObject list for this camera
@@ -338,7 +335,13 @@ public class DetectedObjectController {
 		}
 		cache.resetCache();
 	}
+//------------------------------------------   RANKINGS   ------------------------------------------
 
+	/**
+	 *
+	 * @param httpServletResponse
+	 * @return
+	 */
 	@RequestMapping(value = "/allTimeRanking", method = RequestMethod.GET)
 	public
 	@ResponseBody
@@ -359,6 +362,12 @@ public class DetectedObjectController {
 		}
 	}
 
+	/**
+	 *
+	 * @param httpServletResponse
+	 * @param year
+	 * @return
+	 */
 	@RequestMapping(value = "/rankingByYear", method = RequestMethod.GET)
 	public
 	@ResponseBody
@@ -384,6 +393,13 @@ public class DetectedObjectController {
 		}
 	}
 
+	/**
+	 *
+	 * @param httpServletResponse
+	 * @param year
+	 * @param month
+	 * @return
+	 */
 	@RequestMapping(value = "/rankingByYearAndMonth", method = RequestMethod.GET)
 	public
 	@ResponseBody
@@ -406,6 +422,13 @@ public class DetectedObjectController {
 		}
 	}
 
+	/**
+	 *
+	 * @param httpServletResponse
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
 	@RequestMapping(value = "/rankingBetweenDates", method = RequestMethod.GET)
 	public
 	@ResponseBody
@@ -428,36 +451,19 @@ public class DetectedObjectController {
 		}
 	}
 
-	@RequestMapping(value = "/detectedObjectsHistogram", method = RequestMethod.GET)
-	public
-	@ResponseBody
-	List<DetectedObject> getByHoursOfDayDetectedObjectsHistogram(HttpServletResponse httpServletResponse,
-	                                                     @RequestParam("dayOfTheWeek") int dayOfTheWeek) {
-		Utils.addCorsHeader(httpServletResponse);
-		try {
-			List<DetectedObject> byHoursOfDayDetectedObjectsHistogram = this.detectedObjectServices.getByHoursOfDayDetectedObjectsHistogram(dayOfTheWeek);
-			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-			return byHoursOfDayDetectedObjectsHistogram;
-		} catch (IllegalAccessException e) {
-			LOGGER.info("Trying to request info without logging!");
-			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		} catch (RuntimeException e) {
-			LOGGER.info("Error found: " + e.getMessage());
-			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
-			return null;
-		} catch (Exception e) {
-			LOGGER.info("Error found: " + e.getMessage());
-			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-			return null;
-		}
-	}
+//------------------------------------------ Stats sorted by maximum values by camera ------------------------------------------
 
+	/**
+	 * Provides the service required to retrieve the peak hour by day for an specific camera
+	 * @param httpServletResponse The httpServletResponse
+	 * @param cameraId The id of the camera required
+	 * @return List of the day of the week with their peak hour
+	 */
 	@RequestMapping(value = "/peakHoursByDaysOfTheWeekAndCamera", method = RequestMethod.GET)
 	public
 	@ResponseBody
 	List<DetectedObject> getPeakHoursByDaysOfTheWeekAndCamera(HttpServletResponse httpServletResponse,
-	                                                             @RequestParam("cameraId") int cameraId) {
+															  @RequestParam("cameraId") int cameraId) {
 		Utils.addCorsHeader(httpServletResponse);
 		try {
 			List<DetectedObject> byHoursOfDayDetectedObjectsHistogram = this.detectedObjectServices.getPeakHoursByDaysOfTheWeekAndCamera(cameraId);
@@ -478,5 +484,98 @@ public class DetectedObjectController {
 		}
 	}
 
+	/**
+	 * Provides the service required to retrieve the quantity of detected Objects by hour for an specific camera and a specific day of the week
+	 * @param httpServletResponse The httpServletResponse
+	 * @param dayOfTheWeek The day of the week required (Sunday: 1, Monday: 2, ..., Saturday: 7)
+	 * @param cameraId The id of the camera required
+	 * @return List of the hour with their quantity of detected objects
+	 */
+	@RequestMapping(value = "/detectedObjectsHistogramByHour", method = RequestMethod.GET)
+	public
+	@ResponseBody
+	List<DetectedObject> getByHoursOfDayDetectedObjectsHistogram(HttpServletResponse httpServletResponse,
+	                                                     @RequestParam("dayOfTheWeek") int dayOfTheWeek,
+																 @RequestParam("cameraId") long cameraId) {
+		Utils.addCorsHeader(httpServletResponse);
+		try {
+			List<DetectedObject> byHoursOfDayDetectedObjectsHistogram = this.detectedObjectServices.getByHoursOfDayDetectedObjectsHistogram(dayOfTheWeek, cameraId);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return byHoursOfDayDetectedObjectsHistogram;
+		} catch (IllegalAccessException e) {
+			LOGGER.info("Trying to request info without logging!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+			return null;
+		} catch (Exception e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
+		}
+	}
 
+	/**
+	 * Provides the service required to retrieve the quantity of detected Objects by day of the week for an specific camera
+	 * @param httpServletResponse The httpServletResponse
+	 * @param cameraId The id of the camera required
+	 * @return List of the day of the week with their quantity of detected objects
+	 */
+	@RequestMapping(value = "/detectedObjectsHistogramByDayOfTheWeek", method = RequestMethod.GET)
+	public
+	@ResponseBody
+	List<DetectedObject> getByDayOfTheWeekDetectedObjectsHistogram(HttpServletResponse httpServletResponse,
+																 @RequestParam("cameraId") long cameraId) {
+		Utils.addCorsHeader(httpServletResponse);
+		try {
+			List<DetectedObject> byHoursOfDayDetectedObjectsHistogram = this.detectedObjectServices.getByDayOfTheWeekDetectedObjectsHistogram(cameraId);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return byHoursOfDayDetectedObjectsHistogram;
+		} catch (IllegalAccessException e) {
+			LOGGER.info("Trying to request info without logging!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+			return null;
+		} catch (Exception e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
+		}
+	}
+
+	/**
+	 * Provides the service required to retrieve the quantity of detected Objects by month of the year for an specific camera
+	 * @param httpServletResponse The httpServletResponse
+	 * @param cameraId The id of the camera required
+	 * @return List of the month with their quantity of detected objects
+	 */
+	@RequestMapping(value = "/detectedObjectsHistogramByMonthOfTheYear", method = RequestMethod.GET)
+	public
+	@ResponseBody
+	List<DetectedObject> getByMonthOfTheYearDetectedObjectsHistogram(HttpServletResponse httpServletResponse,
+																 @RequestParam("cameraId") long cameraId) {
+		Utils.addCorsHeader(httpServletResponse);
+		try {
+			List<DetectedObject> byHoursOfDayDetectedObjectsHistogram = this.detectedObjectServices.getByMonthOfTheYearDetectedObjectsHistogram(cameraId);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return byHoursOfDayDetectedObjectsHistogram;
+		} catch (IllegalAccessException e) {
+			LOGGER.info("Trying to request info without logging!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+			return null;
+		} catch (Exception e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
+		}
+	}
 }
