@@ -40,7 +40,7 @@ public class DetectedObjectController {
 	static final Logger LOGGER = Logger.getLogger(DetectedObjectController.class);
 
 	/**
-	 * Provides the service required to create a new detectedObject for the system
+	 * Provides the service required to create a new detected Object for the system
 	 * @param httpServletRequest The httpServletRequest
 	 * @param httpServletResponse The httpServletResponse
 	 * @param jsonInput The detected object converted to json
@@ -76,7 +76,7 @@ public class DetectedObjectController {
 	/**
 	 * Provides the service required to retrieve all the detectedObjects from the dataBase
 	 * @param httpServletResponse The httpServletResponse
-	 * @return The detectedObject list for all cameras
+	 * @return The detected Object list for all cameras
 	 */
 	@RequestMapping(value = "/requestDetectedObject", method = RequestMethod.GET)
 	public
@@ -104,7 +104,7 @@ public class DetectedObjectController {
 	 * Provides the service required to retrieve all the detectedObjects for a specific camera from the dataBase according to the camera ID
 	 * @param httpServletResponse The httpServletResponse
 	 * @param cameraId The id of the camera we want
-	 * @return The detectedObject list for this camera
+	 * @return The detected Object list for this camera
 	 */
 	@RequestMapping(value = "/requestDetectedObjectByCameraId", method = RequestMethod.GET)
 	public
@@ -136,7 +136,7 @@ public class DetectedObjectController {
 	/**
 	 * Provides the service required to retrieve the detectedObjects for an specific date and a specific camera from the dataBase according to the camera ID and the date
 	 * @param httpServletResponse The httpServletResponse
-	 * @param date The specific date from we want to receive the detectedObject
+	 * @param date The specific date from we want to receive the detected Object
 	 * @param cameraId The id of the camera we want
 	 * @return The detectedObjects for this camera created on the specific date
 	 */
@@ -171,7 +171,7 @@ public class DetectedObjectController {
 	/**
 	 * Provides the service required to retrieve the detectedObjects for an specific month and a specific camera from the dataBase according to the camera ID and the month
 	 * @param httpServletResponse The httpServletResponse
-	 * @param month The specific month from we want to receive the detectedObject
+	 * @param month The specific month from we want to receive the detected Object
 	 * @param cameraId The id of the camera we want
 	 * @return The detectedObjects for this camera created on the specific month
 	 */
@@ -202,7 +202,7 @@ public class DetectedObjectController {
 	/**
 	 * Provides the service required to retrieve the detectedObjects for an specific year and a specific camera from the dataBase according to the camera ID and the year
 	 * @param httpServletResponse The httpServletResponse
-	 * @param year The specific year from we want to receive the detectedObject
+	 * @param year The specific year from we want to receive the detected Object
 	 * @param cameraId The id of the camera we want
 	 * @return The detectedObjects for this camera created on the specific year
 	 */
@@ -338,9 +338,9 @@ public class DetectedObjectController {
 //------------------------------------------   RANKINGS   ------------------------------------------
 
 	/**
-	 *
-	 * @param httpServletResponse
-	 * @return
+	 * Provides the service required to retrieve the Historical Ranking of cameras by quantity of detected objects
+	 * @param httpServletResponse The httpServletResponse
+	 * @return The Historical Ranking of cameras by quantity of detected objects
 	 */
 	@RequestMapping(value = "/allTimeRanking", method = RequestMethod.GET)
 	public
@@ -363,10 +363,10 @@ public class DetectedObjectController {
 	}
 
 	/**
-	 *
-	 * @param httpServletResponse
-	 * @param year
-	 * @return
+	 * Provides the service required to retrieve the Ranking of cameras by quantity of detected objects on a required year
+	 * @param httpServletResponse The httpServletResponse
+	 * @param year The specific year from we want to receive the detected Object
+	 * @return The Ranking of cameras by quantity of detected objects on a required year
 	 */
 	@RequestMapping(value = "/rankingByYear", method = RequestMethod.GET)
 	public
@@ -394,11 +394,11 @@ public class DetectedObjectController {
 	}
 
 	/**
-	 *
-	 * @param httpServletResponse
-	 * @param year
-	 * @param month
-	 * @return
+	 * Provides the service required to retrieve the Ranking of cameras by quantity of detected objects on a required month and year
+	 * @param httpServletResponse The httpServletResponse
+	 * @param year The specific year from we want to receive the detected Object
+	 * @param month The specific month from we want to receive the detected Object
+	 * @return The Ranking of cameras by quantity of detected objects on a required month and year
 	 */
 	@RequestMapping(value = "/rankingByYearAndMonth", method = RequestMethod.GET)
 	public
@@ -423,11 +423,11 @@ public class DetectedObjectController {
 	}
 
 	/**
-	 *
-	 * @param httpServletResponse
-	 * @param startDate
-	 * @param endDate
-	 * @return
+	 * Provides the service required to retrieve the Ranking of cameras by quantity of detected objects on a required range of dates
+	 * @param httpServletResponse The httpServletResponse
+	 * @param startDate The start date of the range
+	 * @param endDate The end date of the range
+	 * @return The Ranking of cameras by quantity of detected objects on a required range of dates
 	 */
 	@RequestMapping(value = "/rankingBetweenDates", method = RequestMethod.GET)
 	public
