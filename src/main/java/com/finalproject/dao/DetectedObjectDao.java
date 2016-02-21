@@ -29,4 +29,8 @@ public interface DetectedObjectDao {
 	List<DetectedObject> detectedObjectsRankingByYearAndMonth(int year, int month) throws Exception;
 
 	List<DetectedObject> detectedObjectsRankingBetweenDates(Date startDate, Date endDate) throws Exception;
+
+	List<DetectedObject> getByHoursOfDayDetectedObjectsHistogram(int dayOfTheWeek) throws Exception;
+
+	List<DetectedObject> getPeakHoursByDaysOfTheWeekAndCamera(long cameraId) throws Exception;
 }
