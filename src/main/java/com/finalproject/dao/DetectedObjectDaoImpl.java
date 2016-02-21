@@ -14,13 +14,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * This is the DAO that manages the transaction to the database for the Detected Objects
+ */
 @Component
 public class DetectedObjectDaoImpl implements DetectedObjectDao {
 
 	@Autowired
 	SessionFactory sessionFactory;
-
-	Transaction tx = null;
 
 	static final Logger LOGGER = Logger.getLogger(DetectedObjectDaoImpl.class);
 
@@ -73,6 +74,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.list();
 		session.flush();
 		session.close();
+		LOGGER.info("The detected object created before: " + date.toString() + " for the camera: " + cameraId + " were deleted Successfully!");
 		Utils.listSizeVerifier(detectedObjectList);
 		return true;
 	}

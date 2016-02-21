@@ -1,6 +1,7 @@
 package com.finalproject.dao;
 
 import com.finalproject.model.User;
+import com.sun.org.apache.bcel.internal.generic.LOOKUPSWITCH;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-
+/**
+ * This is the DAO that manages the transaction to the database for the Users
+ */
 @Component
 public class UserDaoImpl implements UserDao {
 
@@ -18,7 +21,6 @@ public class UserDaoImpl implements UserDao {
 	SessionFactory sessionFactory;
 
 	static final Logger LOGGER = Logger.getLogger(UserDaoImpl.class);
-
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -34,8 +36,9 @@ public class UserDaoImpl implements UserDao {
 			tx.commit();
 		} else {
 			session.close();
-			throw new RuntimeException("Usuario Existente!");
+			throw new RuntimeException("The user already exist!");
 		}
+		LOGGER.info("The user: " + user.toString() + " was created successfully");
 		session.close();
 		return true;
 	}
@@ -64,10 +67,11 @@ public class UserDaoImpl implements UserDao {
 	@Override
 	public boolean deleteUser(long id) throws Exception {
 		Session session = sessionFactory.openSession();
-		User o = (User) session.load(User.class, id);
-		session.delete(o);
+		User user = (User) session.load(User.class, id);
+		session.delete(user);
 		session.flush();
 		session.close();
+		LOGGER.info("The user: " + user + " was deleted successfully");
 		return true;
 	}
 

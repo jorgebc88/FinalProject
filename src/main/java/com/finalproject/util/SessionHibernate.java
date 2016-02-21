@@ -11,9 +11,8 @@ public class SessionHibernate {
 	static final Logger LOGGER = Logger.getLogger(SessionHibernate.class);
 
 	public SessionHibernate(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-		this.session = this.sessionFactory.openSession();
-		;
+		SessionHibernate.sessionFactory = sessionFactory;
+		session = SessionHibernate.sessionFactory.openSession();
 	}
 
 

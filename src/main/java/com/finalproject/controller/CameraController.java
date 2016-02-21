@@ -7,17 +7,15 @@ import com.finalproject.util.Utils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+/**
+ * This controller provides all the services available for the cameras
+ */
 @Controller
 @RequestMapping("/camera")
 public class CameraController {
@@ -27,15 +25,18 @@ public class CameraController {
 	@Autowired
 	UserSession userSession;
 
+	/**
+	 * Creation of the logger
+	 */
 	static final Logger LOGGER = Logger.getLogger(CameraController.class);
 
 	/**
 	 * Creates a new camera for the system
 	 *
-	 * @return
-	 * @throws Exception
+	 * @param httpServletRequest The httpServletRequest
+	 * @param httpServletResponse The httpServletResponse
+	 * @param jsonInput The camera object converted to json
 	 */
-
 	@RequestMapping(value = "/newCamera", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public void newCamera(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 						  @RequestBody String jsonInput) {
@@ -59,6 +60,12 @@ public class CameraController {
 		}
 	}
 
+	/**
+	 * Provides the service required to retrieve one camera from the dataBase according to an ID
+	 * @param httpServletResponse The httpServletResponse
+	 * @param id The id of the camera to be retrieved
+	 * @return The camera with the id sent
+	 */
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public
@@ -79,6 +86,11 @@ public class CameraController {
 		return camera;
 	}
 
+	/**
+	 * Provides the service required to retrieve all cameras from the dataBase
+	 * @param httpServletResponse The httpServletResponse
+	 * @return The camera list with all cameras
+	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public
 	@ResponseBody
@@ -97,6 +109,12 @@ public class CameraController {
 		return cameraList;
 	}
 
+	/**
+	 * Provides the service required to delete one camera from the dataBase according to an ID
+	 * @param httpServletResponse The httpServletResponse
+	 * @param id The id of the camera to be deleted
+	 * @return true if everything went well, false if it didn't go well
+	 */
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.GET)
 	public
 	@ResponseBody
@@ -114,6 +132,13 @@ public class CameraController {
 		return false;
 	}
 
+	/**
+	 * Provides the service required to modify the activity flag for one camera from the dataBase according to an ID
+	 * @param httpServletResponse The httpServletResponse
+	 * @param id The id of the camera to be modified
+	 * @param active The new value of the active flag
+	 * @return true if everything went well, false if it didn't go well
+	 */
 	@RequestMapping(value = "modifyCamera", method = RequestMethod.GET)
 	public
 	@ResponseBody

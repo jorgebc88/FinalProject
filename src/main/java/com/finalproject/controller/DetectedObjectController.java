@@ -13,8 +13,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+/**
+ * This controller provides all the services available for the detected objects
+ */
 @Controller
 @RequestMapping("/detectedObject")
 public class DetectedObjectController {
@@ -23,16 +29,27 @@ public class DetectedObjectController {
 	@Autowired
 	UserSession userSession;
 
+	/**
+	 * This map will allow to have a different cache for the cameras
+	 */
 	private Map<Long, DetectedObjectCache> detectedObjectCacheMap = new HashMap<>();
 
-
+	/**
+	 * Creation of the logger
+	 */
 	static final Logger LOGGER = Logger.getLogger(DetectedObjectController.class);
 
+	/**
+	 * Creates a new detectedObject for the system
+	 *
+	 * @param httpServletRequest The httpServletRequest
+	 * @param httpServletResponse The httpServletResponse
+	 * @param jsonInput The detected object converted to json
+	 */
 	@RequestMapping(value = "/DetectedObject", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public void newDetectedObject(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
 								  @RequestBody String jsonInput) {
 		Utils.addCorsHeader(httpServletResponse);
-		Long newCacheValue;
 		try {
 			// Utils.userVerification(httpServletResponse,
 			// userSession);
@@ -56,8 +73,13 @@ public class DetectedObjectController {
 		}
 	}
 
-	// -------------------------------------------------------------------------------------------------------------
 
+	/**
+	 * Provides the service required to retrieve all the detectedObjects from the dataBase
+	 *
+	 * @param httpServletResponse The httpServletResponse
+	 * @return The detectedObject list for all cameras
+	 */
 	@RequestMapping(value = "/requestDetectedObject", method = RequestMethod.GET)
 	public
 	@ResponseBody
@@ -79,8 +101,14 @@ public class DetectedObjectController {
 			return null;
 		}
 	}
-	// -------------------------------------------------------------------------------------------------------------
 
+	/**
+	 * Provides the service required to retrieve all the detectedObjects for a specific camera from the dataBase according to the camera ID
+	 *
+	 * @param httpServletResponse The httpServletResponse
+	 * @param cameraId The id of the camera we want
+	 * @return The detectedObject list for this camera
+	 */
 	@RequestMapping(value = "/requestDetectedObjectByCameraId", method = RequestMethod.GET)
 	public
 	@ResponseBody
@@ -108,6 +136,13 @@ public class DetectedObjectController {
 		}
 	}
 
+	/**
+	 * Provides the service required to retrieve the detectedObjects for an specific date and a specific camera from the dataBase according to the camera ID and the date
+	 * @param httpServletResponse The httpServletResponse
+	 * @param date The specific date from we want to receive the detectedObject
+	 * @param cameraId The id of the camera we want
+	 * @return The detectedObjects for this camera created on the specific date
+	 */
 	@RequestMapping(value = "/requestDetectedObjectByDateAndCameraId", method = RequestMethod.GET)
 	public
 	@ResponseBody
@@ -136,6 +171,13 @@ public class DetectedObjectController {
 		}
 	}
 
+	/**
+	 * Provides the service required to retrieve the detectedObjects for an specific month and a specific camera from the dataBase according to the camera ID and the month
+	 * @param httpServletResponse The httpServletResponse
+	 * @param month The specific month from we want to receive the detectedObject
+	 * @param cameraId The id of the camera we want
+	 * @return The detectedObjects for this camera created on the specific month
+	 */
 	@RequestMapping(value = "/requestDetectedObjectByMonthAndCameraId", method = RequestMethod.GET)
 	public
 	@ResponseBody
@@ -160,6 +202,13 @@ public class DetectedObjectController {
 		}
 	}
 
+	/**
+	 * Provides the service required to retrieve the detectedObjects for an specific year and a specific camera from the dataBase according to the camera ID and the year
+	 * @param httpServletResponse The httpServletResponse
+	 * @param year The specific year from we want to receive the detectedObject
+	 * @param cameraId The id of the camera we want
+	 * @return The detectedObjects for this camera created on the specific year
+	 */
 	@RequestMapping(value = "/requestDetectedObjectByYearAndCameraId", method = RequestMethod.GET)
 	public
 	@ResponseBody
@@ -184,6 +233,14 @@ public class DetectedObjectController {
 		}
 	}
 
+	/**
+	 * Provides the service required to retrieve the detectedObjects for a range of dates and a specific camera from the dataBase according to the camera ID and a date
+	 * @param httpServletResponse The httpServletResponse
+	 * @param startDate The start date
+	 * @param endDate The end date
+	 * @param cameraId The id of the camera we want
+	 * @return The detectedObjects for this camera created on the specific range of dates
+	 */
 	@RequestMapping(value = "/requestDetectedObjectByDatesBetweenAndCameraId", method = RequestMethod.GET)
 	public
 	@ResponseBody
@@ -208,6 +265,13 @@ public class DetectedObjectController {
 		}
 	}
 
+	/**
+	 * Provides the service required to delete the detectedObjects created before an specific date for a specific camera from the dataBase according to the camera ID and the date
+	 * @param httpServletResponse The httpServletResponse
+	 * @param date All the detectedObjects before this date will be deleted
+	 * @param cameraId The detectedObjects detected for this camera will be deleted
+	 * @return True is everything went well, false if not
+	 */
 	@RequestMapping(value = "/deleteDetectedObjectBeforeDateByCameraId", method = RequestMethod.GET)
 	public
 	@ResponseBody
@@ -231,7 +295,12 @@ public class DetectedObjectController {
 		return false;
 	}
 
-
+	/**
+	 * Provides the service required to retrieve the cache of detected objects
+	 * @param httpServletResponse The httpServletResponse
+	 * @param cameraId It is the id of the camera to which we want to receive the cache
+	 * @return The cache is sent every 500 ms
+	 */
 	@RequestMapping(value = "/serverSentEvents", method = RequestMethod.GET, produces = SseFeature.SERVER_SENT_EVENTS)
 	public
 	@ResponseBody
@@ -252,6 +321,11 @@ public class DetectedObjectController {
 		return data.toString();
 	}
 
+	/**
+	 * Provides the service required to reset the cache
+	 * @param httpServletResponse The httpServletResponse
+	 * @param cameraId It is the id of the camera to which we want to restart the cache
+	 */
 	@RequestMapping(value = "/resetCache", method = RequestMethod.GET)
 	public
 	@ResponseBody

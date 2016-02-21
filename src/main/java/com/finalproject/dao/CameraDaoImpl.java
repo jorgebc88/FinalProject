@@ -11,12 +11,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * This is the DAO that manages the transaction to the database for the Cameras
+ */
 @Component
 public class CameraDaoImpl implements CameraDao {
 
 	@Autowired
 	SessionFactory sessionFactory;
-
 
 	static final Logger LOGGER = Logger.getLogger(CameraDaoImpl.class);
 
@@ -33,10 +35,8 @@ public class CameraDaoImpl implements CameraDao {
 			e.printStackTrace();
 			session.close();
 			throw new Exception();
-		} finally {
-
 		}
-		LOGGER.info("Camara guardada: " + camera.toString());
+		LOGGER.info("The camera: " + camera.toString() + " was created successfully!");
 		return true;
 	}
 
@@ -83,10 +83,11 @@ public class CameraDaoImpl implements CameraDao {
 		Session session = sessionFactory.openSession();
 		Transaction transaction;
 
-		Camera o = (Camera) session.load(Camera.class, id);
-		session.delete(o);
+		Camera camera = (Camera) session.load(Camera.class, id);
+		session.delete(camera);
 		session.flush();
 		session.close();
+		LOGGER.info("The camera: " + camera.toString() + " was deleted successfully!");
 		return true;
 	}
 
@@ -94,10 +95,10 @@ public class CameraDaoImpl implements CameraDao {
 	public boolean modifyCamera(long id, boolean active) throws Exception {
 		Session session = sessionFactory.openSession();
 		Transaction transaction;
-
+		Camera camera;
 		try {
 			transaction = session.beginTransaction();
-			Camera camera =	(Camera) session.get(Camera.class, id);
+			camera = (Camera) session.get(Camera.class, id);
 			camera.setActive(active);
 			session.update(camera);
 			transaction.commit();
@@ -105,6 +106,11 @@ public class CameraDaoImpl implements CameraDao {
 			e.printStackTrace();
 			session.close();
 			throw new Exception();
+		}
+		if (active) {
+			LOGGER.info("The camera: " + camera.toString() + " was activated successfully!");
+		} else {
+			LOGGER.info("The camera: " + camera.toString() + " was deactivated successfully!");
 		}
 		return true;
 	}

@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+/**
+ * This controller provides all the services available for the Users
+ */
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -21,15 +24,17 @@ public class UserController {
 	@Autowired
 	UserSession userSession;
 
+	/**
+	 * Creation of the logger
+	 */
 	static final Logger LOGGER = Logger.getLogger(UserController.class);
 
 	/**
-	 * Creates a new user for the system
+	 * Provides the service required for the creation of a new user for the system
 	 *
-	 * @param httpServletRequest
-	 * @param httpServletResponse
-	 * @param jsonInput
-	 * @return
+	 * @param httpServletRequest The httpServletRequest
+	 * @param httpServletResponse The httpServletResponse
+	 * @param jsonInput	The user object converted to json
 	 */
 	@RequestMapping(value = "/newUser", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public void newUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
@@ -59,18 +64,18 @@ public class UserController {
 	/**
 	 * Provides the service required for the user to login
 	 *
-	 * @param httpServletRequest
-	 * @param httpServletResponse
-	 * @param jsonEntrada
-	 * @return
+	 * @param httpServletRequest The httpServletRequest
+	 * @param httpServletResponse The httpServletResponse
+	 * @param jsonInput The user object converted to json
+	 * @return the user who was logged in
 	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	public
 	@ResponseBody
 	User login(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-			   @RequestBody String jsonEntrada) {
+			   @RequestBody String jsonInput) {
 		Utils.addCorsHeader(httpServletResponse);
-		User user = (User) Utils.fromJson(jsonEntrada, User.class);
+		User user = (User) Utils.fromJson(jsonInput, User.class);
 		if (userSession.getUser() != null) {
 			LOGGER.info("User: " + userSession.getUser().getUserName() + " is already logged!");
 			return user;
@@ -94,14 +99,15 @@ public class UserController {
 	}
 
 	/**
-	 * @param httpServletResponse
-	 * @return
-	 * @throws Exception
+	 * Provides the service required for the user to logout
+	 *
+	 * @param httpServletResponse The httpServletResponse
+	 * @return the user who was logged out
 	 */
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public
 	@ResponseBody
-	User logout(HttpServletResponse httpServletResponse) throws Exception {
+	User logout(HttpServletResponse httpServletResponse) {
 		Utils.addCorsHeader(httpServletResponse);
 		User user = null;
 		if (userSession.getUser() != null) {
@@ -115,6 +121,12 @@ public class UserController {
 		return userSession.getUser();
 	}
 
+	/**
+	 * Provides the service required to retrieve one user from the dataBase according to an ID
+	 * @param httpServletResponse The httpServletResponse
+	 * @param id The id of the camera to be retrieved
+	 * @return The User with the id sent
+	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public
 	@ResponseBody
@@ -136,6 +148,11 @@ public class UserController {
 		return user;
 	}
 
+	/**
+	 * Provides the service required to retrieve all users from the dataBase
+	 * @param httpServletResponse The httpServletResponse
+	 * @return The list of all Users
+	 */
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public
 	@ResponseBody
@@ -157,6 +174,12 @@ public class UserController {
 		return userList;
 	}
 
+	/**
+	 * Provides the service required to delete one user from the dataBase according to an ID
+	 * @param httpServletResponse The httpServletResponse
+	 * @param id The id of the camera to be deleted
+	 * @return true if everything went well, false if it didn't go well
+	 */
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.GET)
 	public
 	@ResponseBody
