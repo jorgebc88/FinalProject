@@ -428,4 +428,55 @@ public class DetectedObjectController {
 		}
 	}
 
+	@RequestMapping(value = "/detectedObjectsHistogram", method = RequestMethod.GET)
+	public
+	@ResponseBody
+	List<DetectedObject> getByHoursOfDayDetectedObjectsHistogram(HttpServletResponse httpServletResponse,
+	                                                     @RequestParam("dayOfTheWeek") int dayOfTheWeek) {
+		Utils.addCorsHeader(httpServletResponse);
+		try {
+			List<DetectedObject> byHoursOfDayDetectedObjectsHistogram = this.detectedObjectServices.getByHoursOfDayDetectedObjectsHistogram(dayOfTheWeek);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return byHoursOfDayDetectedObjectsHistogram;
+		} catch (IllegalAccessException e) {
+			LOGGER.info("Trying to request info without logging!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+			return null;
+		} catch (Exception e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
+		}
+	}
+
+	@RequestMapping(value = "/peakHoursByDaysOfTheWeekAndCamera", method = RequestMethod.GET)
+	public
+	@ResponseBody
+	List<DetectedObject> getPeakHoursByDaysOfTheWeekAndCamera(HttpServletResponse httpServletResponse,
+	                                                             @RequestParam("cameraId") int cameraId) {
+		Utils.addCorsHeader(httpServletResponse);
+		try {
+			List<DetectedObject> byHoursOfDayDetectedObjectsHistogram = this.detectedObjectServices.getPeakHoursByDaysOfTheWeekAndCamera(cameraId);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return byHoursOfDayDetectedObjectsHistogram;
+		} catch (IllegalAccessException e) {
+			LOGGER.info("Trying to request info without logging!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+			return null;
+		} catch (Exception e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
+		}
+	}
+
+
 }

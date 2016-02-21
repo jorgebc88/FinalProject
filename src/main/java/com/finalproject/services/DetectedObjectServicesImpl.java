@@ -74,4 +74,14 @@ public class DetectedObjectServicesImpl implements DetectedObjectServices {
 	public List<DetectedObject> detectedObjectsRankingBetweenDates(Date startDate, Date endDate) throws Exception {
 		return this.detectedObjectDao.detectedObjectsRankingBetweenDates(startDate, endDate);
 	}
+
+	@Override
+	public List<DetectedObject> getByHoursOfDayDetectedObjectsHistogram(int dayOfTheWeek) throws Exception {
+		return this.detectedObjectDao.getByHoursOfDayDetectedObjectsHistogram(dayOfTheWeek);
+	}
+
+	@Override
+	public List<DetectedObject> getPeakHoursByDaysOfTheWeekAndCamera(long cameraId) throws Exception {
+		return this.detectedObjectDao.getPeakHoursByDaysOfTheWeekAndCamera(cameraId);
+	}
 }

@@ -303,4 +303,65 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 		return rankingBetweenDates;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DetectedObject> getByHoursOfDayDetectedObjectsHistogram(int dayOfTheWeek) throws Exception {
+		Session session = sessionFactory.openSession();
+		Transaction transaction;
+		List<DetectedObject> byHoursHistogram;
+
+		StringBuilder hql = new StringBuilder("SELECT EXTRACT(HOUR FROM date), COUNT(*) AS num FROM DetectedObject")
+				.append(" WHERE DAYOFWEEK(date) = :dayOfTheWeek")
+				.append(" GROUP BY ( EXTRACT(HOUR FROM date) )")
+				.append(" ORDER BY num DESC");
+
+		byHoursHistogram = session.createQuery(hql.toString())
+				.setParameter("dayOfTheWeek",dayOfTheWeek)
+				.list();
+
+		try {
+			transaction = session.beginTransaction();
+			transaction.commit();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
+			throw new Exception();
+		}
+		Utils.listSizeVerifier(byHoursHistogram);
+		return byHoursHistogram;
+	}
+
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<DetectedObject> getPeakHoursByDaysOfTheWeekAndCamera(long cameraId) throws Exception {
+		Session session = sessionFactory.openSession();
+		Transaction transaction;
+		List<DetectedObject> peakHours;
+
+		StringBuilder hql = new StringBuilder("SELECT DISTINCT camera_id, days, hours, MAX(CANT) AS PeakHour FROM")
+				.append(" (SELECT d.camera_id, dayofweek(d.date) AS days, HOUR(d.date) AS hours ,COUNT(*) AS CANT FROM detected_object AS d group by hours order by CANT DESC) AS RESULT")
+				.append(" WHERE camera_id = :camera_id")
+				.append(" GROUP BY days")
+				.append(" ORDER BY PeakHour DESC");
+
+		LOGGER.info(hql.toString());
+
+		peakHours = session.createSQLQuery(hql.toString())
+				.setParameter("camera_id", cameraId)
+				.list();
+
+		try {
+			transaction = session.beginTransaction();
+			transaction.commit();
+		} catch (HibernateException e) {
+			e.printStackTrace();
+			session.close();
+			throw new Exception();
+		}
+		Utils.listSizeVerifier(peakHours);
+		return peakHours;
+	}
+
+
 }
