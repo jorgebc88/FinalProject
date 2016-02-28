@@ -19,8 +19,8 @@
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost:3306/proyecto_final" />
 		<property name="username" value="root" />
-		<property name="password" value="admin" />
-	</bean>
+		<property name="password" value="root" />
+di	</bean>
 
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
