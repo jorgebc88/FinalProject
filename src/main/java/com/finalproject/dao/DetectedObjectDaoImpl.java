@@ -176,7 +176,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 	}
 
 
-//----------------------------------------------------------------RANKINKGS --------------------------------------------------------------------------
+	//----------------------------------------------------------------RANKINKGS --------------------------------------------------------------------------
 	@SuppressWarnings({"unchecked", "deprecation"})
 	@Override
 	public List<DetectedObject> allTimeDetectedObjectsRanking() throws Exception {
@@ -196,6 +196,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 			session.close();
 			throw new Exception();
 		}
+		session.close();
 		Utils.listSizeVerifier(allTimeRanking);
 		return allTimeRanking.isEmpty() ? new ArrayList<DetectedObject>() : allTimeRanking;
 	}
@@ -224,6 +225,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 			session.close();
 			throw new Exception();
 		}
+		session.close();
 		Utils.listSizeVerifier(rankingByYear);
 		return rankingByYear;
 	}
@@ -254,6 +256,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 			session.close();
 			throw new Exception();
 		}
+		session.close();
 		Utils.listSizeVerifier(rankingByYearAndMonth);
 		return rankingByYearAndMonth;
 	}
@@ -265,25 +268,13 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 		Transaction transaction;
 		List<DetectedObject> rankingBetweenDates;
 
-		int startHour, startMinutes, endHour, endMinutes;
-		startHour = startDate.getHours();
-		startMinutes = startDate.getMinutes();
-		endHour = endDate.getHours();
-		endMinutes = endDate.getMinutes();
-
-		String startHourMinutes, endHourMinutes;
-
-		startHourMinutes = String.format("%02d", startHour) + String.format("%02d", startMinutes);
-		endHourMinutes = String.format("%02d", endHour) + String.format("%02d", endMinutes);
-
 		startDate.setHours(0);
 		startDate.setMinutes(0);
 		endDate.setHours(23);
 		endDate.setMinutes(59);
 
 		StringBuilder hql = new StringBuilder("SELECT camera_id, COUNT(*) AS num FROM DetectedObject");
-		hql.append(" WHERE (EXTRACT(HOUR_MINUTE FROM date)) BETWEEN :start_hour_minute AND :end_hour_minute)")
-				.append(" AND date >= :startDate")
+		hql.append(" WHERE date >= :startDate")
 				.append(" AND date <= :endDate")
 				.append(" GROUP BY camera_id")
 				.append(" ORDER BY num DESC");
@@ -291,8 +282,6 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 		rankingBetweenDates = session.createQuery(hql.toString())
 				.setParameter("startDate", startDate)
 				.setParameter("endDate", endDate)
-				.setParameter("start_hour_minute", Integer.parseInt(startHourMinutes))
-				.setParameter("end_hour_minute", Integer.parseInt(endHourMinutes))
 				.list();
 		try {
 			transaction = session.beginTransaction();
@@ -302,6 +291,8 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 			session.close();
 			throw new Exception();
 		}
+		session.close();
+		Utils.listSizeVerifier(rankingBetweenDates);
 		return rankingBetweenDates;
 	}
 
@@ -331,6 +322,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 			session.close();
 			throw new Exception();
 		}
+		session.close();
 		Utils.listSizeVerifier(peakHours);
 		return peakHours;
 	}
@@ -360,6 +352,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 			session.close();
 			throw new Exception();
 		}
+		session.close();
 		Utils.listSizeVerifier(byHoursHistogram);
 		return byHoursHistogram;
 	}
@@ -384,8 +377,10 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 			session.close();
 			throw new Exception();
 		}
+		session.close();
 		Utils.listSizeVerifier(ByDayOfTheWeekDetectedObjectsHistogram);
-		return ByDayOfTheWeekDetectedObjectsHistogram;	}
+		return ByDayOfTheWeekDetectedObjectsHistogram;
+	}
 
 	@Override
 	public List<DetectedObject> getByMonthOfTheYearDetectedObjectsHistogram(long cameraId) throws Exception {
@@ -407,7 +402,9 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 			session.close();
 			throw new Exception();
 		}
+		session.close();
 		Utils.listSizeVerifier(ByMonthOfTheYearDetectedObjectsHistogram);
-		return ByMonthOfTheYearDetectedObjectsHistogram;	}
+		return ByMonthOfTheYearDetectedObjectsHistogram;
+	}
 
 }

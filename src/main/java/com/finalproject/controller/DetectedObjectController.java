@@ -93,6 +93,10 @@ public class DetectedObjectController {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			return null;
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+			return null;
 		} catch (Exception e) {
 			LOGGER.info("Error found: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -192,6 +196,10 @@ public class DetectedObjectController {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			return null;
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+			return null;
 		} catch (Exception e) {
 			LOGGER.info("Error found: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -222,6 +230,10 @@ public class DetectedObjectController {
 		} catch (IllegalAccessException e) {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
 			return null;
 		} catch (Exception e) {
 			LOGGER.info("Error found: " + e.getMessage());
@@ -255,6 +267,10 @@ public class DetectedObjectController {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			return null;
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+			return null;
 		} catch (Exception e) {
 			LOGGER.info("Error found: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -285,6 +301,9 @@ public class DetectedObjectController {
 		} catch (IllegalAccessException e) {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
 		} catch (Exception e) {
 			LOGGER.info("Error found: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -355,6 +374,10 @@ public class DetectedObjectController {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			return null;
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+			return null;
 		} catch (Exception e) {
 			LOGGER.info("Error found: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -415,6 +438,10 @@ public class DetectedObjectController {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			return null;
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+			return null;
 		} catch (Exception e) {
 			LOGGER.info("Error found: " + e.getMessage());
 			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -443,6 +470,10 @@ public class DetectedObjectController {
 		} catch (IllegalAccessException e) {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
 			return null;
 		} catch (Exception e) {
 			LOGGER.info("Error found: " + e.getMessage());
