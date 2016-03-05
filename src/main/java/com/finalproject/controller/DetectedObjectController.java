@@ -493,11 +493,11 @@ public class DetectedObjectController {
 	@RequestMapping(value = "/peakHoursByDaysOfTheWeekAndCamera", method = RequestMethod.GET)
 	public
 	@ResponseBody
-	List<DetectedObject> getPeakHoursByDaysOfTheWeekAndCamera(HttpServletResponse httpServletResponse,
+	List<Object[]> getPeakHoursByDaysOfTheWeekAndCamera(HttpServletResponse httpServletResponse,
 															  @RequestParam("cameraId") int cameraId) {
 		Utils.addCorsHeader(httpServletResponse);
 		try {
-			List<DetectedObject> byHoursOfDayDetectedObjectsHistogram = this.detectedObjectServices.getPeakHoursByDaysOfTheWeekAndCamera(cameraId);
+			List<Object[]> byHoursOfDayDetectedObjectsHistogram = this.detectedObjectServices.getPeakHoursByDaysOfTheWeekAndCamera(cameraId);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			return byHoursOfDayDetectedObjectsHistogram;
 		} catch (IllegalAccessException e) {
@@ -525,12 +525,12 @@ public class DetectedObjectController {
 	@RequestMapping(value = "/detectedObjectsHistogramByHour", method = RequestMethod.GET)
 	public
 	@ResponseBody
-	List<DetectedObject> getByHoursOfDayDetectedObjectsHistogram(HttpServletResponse httpServletResponse,
+	List<Object[]> getByHoursOfDayDetectedObjectsHistogram(HttpServletResponse httpServletResponse,
 	                                                     @RequestParam("dayOfTheWeek") int dayOfTheWeek,
 																 @RequestParam("cameraId") long cameraId) {
 		Utils.addCorsHeader(httpServletResponse);
 		try {
-			List<DetectedObject> byHoursOfDayDetectedObjectsHistogram = this.detectedObjectServices.getByHoursOfDayDetectedObjectsHistogram(dayOfTheWeek, cameraId);
+			List<Object[]> byHoursOfDayDetectedObjectsHistogram = this.detectedObjectServices.getByHoursOfDayDetectedObjectsHistogram(dayOfTheWeek, cameraId);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			return byHoursOfDayDetectedObjectsHistogram;
 		} catch (IllegalAccessException e) {
@@ -557,11 +557,11 @@ public class DetectedObjectController {
 	@RequestMapping(value = "/detectedObjectsHistogramByDayOfTheWeek", method = RequestMethod.GET)
 	public
 	@ResponseBody
-	List<DetectedObject> getByDayOfTheWeekDetectedObjectsHistogram(HttpServletResponse httpServletResponse,
+	List<Object[]> getByDayOfTheWeekDetectedObjectsHistogram(HttpServletResponse httpServletResponse,
 																 @RequestParam("cameraId") long cameraId) {
 		Utils.addCorsHeader(httpServletResponse);
 		try {
-			List<DetectedObject> byHoursOfDayDetectedObjectsHistogram = this.detectedObjectServices.getByDayOfTheWeekDetectedObjectsHistogram(cameraId);
+			List<Object[]> byHoursOfDayDetectedObjectsHistogram = this.detectedObjectServices.getByDayOfTheWeekDetectedObjectsHistogram(cameraId);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			return byHoursOfDayDetectedObjectsHistogram;
 		} catch (IllegalAccessException e) {
@@ -588,13 +588,108 @@ public class DetectedObjectController {
 	@RequestMapping(value = "/detectedObjectsHistogramByMonthOfTheYear", method = RequestMethod.GET)
 	public
 	@ResponseBody
-	List<DetectedObject> getByMonthOfTheYearDetectedObjectsHistogram(HttpServletResponse httpServletResponse,
+	List<Object[]> getByMonthOfTheYearDetectedObjectsHistogram(HttpServletResponse httpServletResponse,
 																 @RequestParam("cameraId") long cameraId) {
 		Utils.addCorsHeader(httpServletResponse);
 		try {
-			List<DetectedObject> byHoursOfDayDetectedObjectsHistogram = this.detectedObjectServices.getByMonthOfTheYearDetectedObjectsHistogram(cameraId);
+			List<Object[]> byHoursOfDayDetectedObjectsHistogram = this.detectedObjectServices.getByMonthOfTheYearDetectedObjectsHistogram(cameraId);
 			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
 			return byHoursOfDayDetectedObjectsHistogram;
+		} catch (IllegalAccessException e) {
+			LOGGER.info("Trying to request info without logging!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+			return null;
+		} catch (Exception e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
+		}
+	}
+
+	/**
+	 * Provides the service required to retrieve the average of detected Objects by hour for an specific camera and a specific day of the week
+	 * @param httpServletResponse The httpServletResponse
+	 * @param dayOfTheWeek The day of the week required (Sunday: 1, Monday: 2, ..., Saturday: 7)
+	 * @param cameraId The id of the camera required
+	 * @return List of the hour with their quantity of detected objects
+	 */
+	@RequestMapping(value = "/detectedObjectsAverageHistogramByHour", method = RequestMethod.GET)
+	public
+	@ResponseBody
+	List<Object[]> getByHoursOfDayDetectedObjectsAverageHistogram(HttpServletResponse httpServletResponse,
+														   @RequestParam("dayOfTheWeek") int dayOfTheWeek,
+														   @RequestParam("cameraId") long cameraId) {
+		Utils.addCorsHeader(httpServletResponse);
+		try {
+			List<Object[]> byHoursOfDayDetectedObjectsAverageHistogram = this.detectedObjectServices.getByHoursOfDayDetectedObjectsAverageHistogram(dayOfTheWeek, cameraId);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return byHoursOfDayDetectedObjectsAverageHistogram;
+		} catch (IllegalAccessException e) {
+			LOGGER.info("Trying to request info without logging!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+			return null;
+		} catch (Exception e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
+		}
+	}
+
+	/**
+	 * Provides the service required to retrieve the average of detected Objects by day of the week for an specific camera
+	 * @param httpServletResponse The httpServletResponse
+	 * @param cameraId The id of the camera required
+	 * @return List of the day of the week with their quantity of detected objects
+	 */
+	@RequestMapping(value = "/detectedObjectsAverageHistogramByDayOfTheWeek", method = RequestMethod.GET)
+	public
+	@ResponseBody
+	List<Object[]> getByDayOfTheWeekDetectedObjectsAverageHistogram(HttpServletResponse httpServletResponse,
+															 @RequestParam("cameraId") long cameraId) {
+		Utils.addCorsHeader(httpServletResponse);
+		try {
+			List<Object[]> byHoursOfDayDetectedObjectsAverageHistogram = this.detectedObjectServices.getByDayOfTheWeekDetectedObjectsAverageHistogram(cameraId);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return byHoursOfDayDetectedObjectsAverageHistogram;
+		} catch (IllegalAccessException e) {
+			LOGGER.info("Trying to request info without logging!");
+			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		} catch (RuntimeException e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_NO_CONTENT);
+			return null;
+		} catch (Exception e) {
+			LOGGER.info("Error found: " + e.getMessage());
+			httpServletResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			return null;
+		}
+	}
+
+	/**
+	 * Provides the service required to retrieve the average of detected Objects by month of the year for an specific camera
+	 * @param httpServletResponse The httpServletResponse
+	 * @param cameraId The id of the camera required
+	 * @return List of the month with their quantity of detected objects
+	 */
+	@RequestMapping(value = "/detectedObjectsAverageHistogramByMonthOfTheYear", method = RequestMethod.GET)
+	public
+	@ResponseBody
+	List<Object[]> getByMonthOfTheYearDetectedObjectsAverageHistogram(HttpServletResponse httpServletResponse,
+															   @RequestParam("cameraId") long cameraId) {
+		Utils.addCorsHeader(httpServletResponse);
+		try {
+			List<Object[]> byHoursOfDayDetectedObjectsAverageHistogram = this.detectedObjectServices.getByMonthOfTheYearDetectedObjectsAverageHistogram(cameraId);
+			httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+			return byHoursOfDayDetectedObjectsAverageHistogram;
 		} catch (IllegalAccessException e) {
 			LOGGER.info("Trying to request info without logging!");
 			httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);

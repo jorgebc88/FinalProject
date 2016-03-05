@@ -80,22 +80,37 @@ public class DetectedObjectServicesImpl implements DetectedObjectServices {
 //------------------------------------------ Stats sorted by maximum values by camera ------------------------------------------
 
 	@Override
-	public List<DetectedObject> getPeakHoursByDaysOfTheWeekAndCamera(long cameraId) throws Exception {
+	public List<Object[]> getPeakHoursByDaysOfTheWeekAndCamera(long cameraId) throws Exception {
 		return this.detectedObjectDao.getPeakHoursByDaysOfTheWeekAndCamera(cameraId);
 	}
 
 	@Override
-	public List<DetectedObject> getByHoursOfDayDetectedObjectsHistogram(int dayOfTheWeek, long camera_id) throws Exception {
+	public List<Object[]> getByHoursOfDayDetectedObjectsHistogram(int dayOfTheWeek, long camera_id) throws Exception {
 		return this.detectedObjectDao.getByHoursOfDayDetectedObjectsHistogram(dayOfTheWeek, camera_id);
 	}
 
 	@Override
-	public List<DetectedObject> getByDayOfTheWeekDetectedObjectsHistogram(long camera_id) throws Exception {
+	public List<Object[]> getByDayOfTheWeekDetectedObjectsHistogram(long camera_id) throws Exception {
 		return this.detectedObjectDao.getByDayOfTheWeekDetectedObjectsHistogram(camera_id);
 	}
 
 	@Override
-	public List<DetectedObject> getByMonthOfTheYearDetectedObjectsHistogram(long cameraId) throws Exception {
+	public List<Object[]> getByMonthOfTheYearDetectedObjectsHistogram(long cameraId) throws Exception {
 		return this.detectedObjectDao.getByMonthOfTheYearDetectedObjectsHistogram(cameraId);
+	}
+
+	@Override
+	public List<Object[]> getByHoursOfDayDetectedObjectsAverageHistogram(int dayOfTheWeek, long camera_id) throws Exception {
+		return this.detectedObjectDao.getByHoursOfDayDetectedObjectsAverageHistogram(dayOfTheWeek, camera_id);
+	}
+
+	@Override
+	public List<Object[]> getByDayOfTheWeekDetectedObjectsAverageHistogram(long cameraId) throws Exception {
+		return this.detectedObjectDao.getByDayOfTheWeekDetectedObjectsAverageHistogram(cameraId);
+	}
+
+	@Override
+	public List<Object[]> getByMonthOfTheYearDetectedObjectsAverageHistogram(long cameraId) throws Exception {
+		return this.detectedObjectDao.getByMonthOfTheYearDetectedObjectsAverageHistogram(cameraId);
 	}
 }

@@ -10,6 +10,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -39,10 +40,8 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 	@Override
 	public List<DetectedObject> getDetectedObjectList() throws Exception {
 		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
 		List<DetectedObject> detectedObjectList = session.createCriteria(DetectedObject.class)
 				.list();
-		tx.commit();
 		session.close();
 		Utils.listSizeVerifier(detectedObjectList);
 
@@ -83,7 +82,6 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 	@Override
 	public List<DetectedObject> findByDateAndCameraId(Date date, long cameraId) throws Exception {
 		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
 
 		int year = date.getYear() + 1900;
 		int month = date.getMonth() + 1;
@@ -100,7 +98,6 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.setParameter("hour", hour)
 				.setParameter("minute", minutes)
 				.list();
-		tx.commit();
 		session.close();
 		Utils.listSizeVerifier(detectedObjectList);
 		return detectedObjectList;
@@ -110,12 +107,10 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 	@Override
 	public List<DetectedObject> findByMonthAndCameraId(int month, long cameraId) throws Exception {
 		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
 		List<DetectedObject> detectedObjectList = session.createQuery("FROM DetectedObject WHERE camera_id = :camera_id AND :month = EXTRACT(MONTH FROM Date) ")
 				.setParameter("camera_id", cameraId)
 				.setParameter("month", month)
 				.list();
-		tx.commit();
 		session.close();
 		Utils.listSizeVerifier(detectedObjectList);
 		return detectedObjectList;
@@ -125,12 +120,10 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 	@Override
 	public List<DetectedObject> findByYearAndCameraId(int year, long cameraId) throws Exception {
 		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
 		List<DetectedObject> detectedObjectList = session.createQuery("FROM DetectedObject WHERE camera_id = :camera_id AND :year = EXTRACT(YEAR FROM Date) ")
 				.setParameter("camera_id", cameraId)
 				.setParameter("year", year)
 				.list();
-		tx.commit();
 		session.close();
 		Utils.listSizeVerifier(detectedObjectList);
 		return detectedObjectList;
@@ -158,7 +151,6 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 		endDate.setMinutes(59);
 
 		Session session = sessionFactory.openSession();
-		Transaction tx = session.beginTransaction();
 
 		List<DetectedObject> detectedObjectList = session.createQuery("FROM DetectedObject WHERE camera_id = :camera_id AND (EXTRACT(HOUR_MINUTE FROM date) BETWEEN :start_hour_minute AND :end_hour_minute) AND date >= :startDate AND date <= :endDate ")
 				.setParameter("startDate", startDate)
@@ -167,7 +159,6 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.setParameter("end_hour_minute", Integer.parseInt(endHourMinutes))
 				.setParameter("camera_id", cameraId)
 				.list();
-		tx.commit();
 		session.close();
 
 		LOGGER.info("Number of detected objects: " + detectedObjectList.size());
@@ -205,7 +196,6 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 	@Override
 	public List<DetectedObject> detectedObjectsRankingByYear(int year) throws Exception {
 		Session session = sessionFactory.openSession();
-		Transaction transaction;
 		List<DetectedObject> rankingByYear;
 
 		StringBuilder hql = new StringBuilder("SELECT camera_id, COUNT(*) AS num FROM DetectedObject")
@@ -217,14 +207,6 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.setParameter("year",year)
 				.list();
 
-		try {
-			transaction = session.beginTransaction();
-			transaction.commit();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			session.close();
-			throw new Exception();
-		}
 		session.close();
 		Utils.listSizeVerifier(rankingByYear);
 		return rankingByYear;
@@ -234,7 +216,6 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 	@Override
 	public List<DetectedObject> detectedObjectsRankingByYearAndMonth(int year, int month) throws Exception {
 		Session session = sessionFactory.openSession();
-		Transaction transaction;
 		List<DetectedObject> rankingByYearAndMonth;
 
 		StringBuilder hql = new StringBuilder("SELECT camera_id, COUNT(*) AS num FROM DetectedObject");
@@ -248,14 +229,6 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.setParameter("month", month)
 				.list();
 
-		try {
-			transaction = session.beginTransaction();
-			transaction.commit();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			session.close();
-			throw new Exception();
-		}
 		session.close();
 		Utils.listSizeVerifier(rankingByYearAndMonth);
 		return rankingByYearAndMonth;
@@ -265,7 +238,6 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 	@Override
 	public List<DetectedObject> detectedObjectsRankingBetweenDates(Date startDate, Date endDate) throws Exception {
 		Session session = sessionFactory.openSession();
-		Transaction transaction;
 		List<DetectedObject> rankingBetweenDates;
 
 		startDate.setHours(0);
@@ -283,14 +255,7 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.setParameter("startDate", startDate)
 				.setParameter("endDate", endDate)
 				.list();
-		try {
-			transaction = session.beginTransaction();
-			transaction.commit();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			session.close();
-			throw new Exception();
-		}
+
 		session.close();
 		Utils.listSizeVerifier(rankingBetweenDates);
 		return rankingBetweenDates;
@@ -300,10 +265,9 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DetectedObject> getPeakHoursByDaysOfTheWeekAndCamera(long cameraId) throws Exception {
+	public List<Object[]> getPeakHoursByDaysOfTheWeekAndCamera(long cameraId) throws Exception {
 		Session session = sessionFactory.openSession();
-		Transaction transaction;
-		List<DetectedObject> peakHours;
+		List<Object[]> peakHours;
 
 		StringBuilder hql = new StringBuilder("SELECT DISTINCT days, hours, MAX(cant) FROM")
 				.append(" (SELECT d.camera_id, dayofweek(d.date) AS days, HOUR(d.date) AS hours ,COUNT(*)")
@@ -314,14 +278,6 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.setParameter("camera_id", cameraId)
 				.list();
 
-		try {
-			transaction = session.beginTransaction();
-			transaction.commit();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			session.close();
-			throw new Exception();
-		}
 		session.close();
 		Utils.listSizeVerifier(peakHours);
 		return peakHours;
@@ -329,10 +285,9 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<DetectedObject> getByHoursOfDayDetectedObjectsHistogram(int dayOfTheWeek, long camera_id) throws Exception {
+	public List<Object[]> getByHoursOfDayDetectedObjectsHistogram(int dayOfTheWeek, long camera_id) throws Exception {
 		Session session = sessionFactory.openSession();
-		Transaction transaction;
-		List<DetectedObject> byHoursHistogram;
+		List<Object[]> byHoursHistogram;
 
 		StringBuilder hql = new StringBuilder("SELECT EXTRACT(HOUR FROM date), COUNT(*) AS num FROM DetectedObject")
 				.append(" WHERE DAYOFWEEK(date) = :dayOfTheWeek")
@@ -344,24 +299,15 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.setParameter("camera_id", camera_id)
 				.list();
 
-		try {
-			transaction = session.beginTransaction();
-			transaction.commit();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			session.close();
-			throw new Exception();
-		}
 		session.close();
 		Utils.listSizeVerifier(byHoursHistogram);
 		return byHoursHistogram;
 	}
 
 	@Override
-	public List<DetectedObject> getByDayOfTheWeekDetectedObjectsHistogram(long cameraId) throws Exception {
+	public List<Object[]> getByDayOfTheWeekDetectedObjectsHistogram(long cameraId) throws Exception {
 		Session session = sessionFactory.openSession();
-		Transaction transaction;
-		List<DetectedObject> ByDayOfTheWeekDetectedObjectsHistogram;
+		List<Object[]> ByDayOfTheWeekDetectedObjectsHistogram;
 
 		StringBuilder hql = new StringBuilder("SELECT dayofweek(d.date)	AS days ,COUNT(*) AS CANT FROM detected_object AS d WHERE camera_id = :camera_id group by days" );
 
@@ -369,24 +315,15 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.setParameter("camera_id", cameraId)
 				.list();
 
-		try {
-			transaction = session.beginTransaction();
-			transaction.commit();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			session.close();
-			throw new Exception();
-		}
 		session.close();
 		Utils.listSizeVerifier(ByDayOfTheWeekDetectedObjectsHistogram);
 		return ByDayOfTheWeekDetectedObjectsHistogram;
 	}
 
 	@Override
-	public List<DetectedObject> getByMonthOfTheYearDetectedObjectsHistogram(long cameraId) throws Exception {
+	public List<Object[]> getByMonthOfTheYearDetectedObjectsHistogram(long cameraId) throws Exception {
 		Session session = sessionFactory.openSession();
-		Transaction transaction;
-		List<DetectedObject> ByMonthOfTheYearDetectedObjectsHistogram;
+		List<Object[]> ByMonthOfTheYearDetectedObjectsHistogram;
 
 		StringBuilder hql = new StringBuilder("SELECT MONTH(d.date) AS months ,COUNT(*) AS CANT FROM detected_object AS d WHERE camera_id = :camera_id group by months");
 
@@ -394,17 +331,64 @@ public class DetectedObjectDaoImpl implements DetectedObjectDao {
 				.setParameter("camera_id", cameraId)
 				.list();
 
-		try {
-			transaction = session.beginTransaction();
-			transaction.commit();
-		} catch (HibernateException e) {
-			e.printStackTrace();
-			session.close();
-			throw new Exception();
-		}
 		session.close();
 		Utils.listSizeVerifier(ByMonthOfTheYearDetectedObjectsHistogram);
 		return ByMonthOfTheYearDetectedObjectsHistogram;
+	}
+
+	//------------------------------------------ Stats sorted by average values by camera ------------------------------------------
+	@Override
+	public List<Object[]> getByHoursOfDayDetectedObjectsAverageHistogram(int dayOfTheWeek, long camera_id) throws Exception {
+		Session session = sessionFactory.openSession();
+		List<Object[]> byHoursOfDayDetectedObjectsAverageHistogram = this.getByHoursOfDayDetectedObjectsHistogram(dayOfTheWeek, camera_id);
+		List<Object[]> historicalHoursOfDayQuantity;
+		StringBuilder hql = new StringBuilder("SELECT days, count(*) as Cant FROM ")
+				.append("(SELECT dayofweek(d.date) AS days ,COUNT(*) AS CANT FROM detected_object AS d WHERE camera_id = :camera_id group by year(d.date), month(d.date),day(d.date)) as subSet ")
+				.append(" WHERE subSet.days = :dayOfTheWeek  GROUP BY days");
+
+		historicalHoursOfDayQuantity = session.createSQLQuery(hql.toString())
+				.setParameter("dayOfTheWeek", dayOfTheWeek)
+				.setParameter("camera_id", camera_id)
+				.list();
+
+		session.close();
+		List<Object[]> ByHoursOfDayDetectedObjectsAverageHistogram = Utils.calculateAverage(byHoursOfDayDetectedObjectsAverageHistogram, historicalHoursOfDayQuantity.get(0));
+
+		return ByHoursOfDayDetectedObjectsAverageHistogram;
+	}
+
+	@Override
+	public List<Object[]> getByDayOfTheWeekDetectedObjectsAverageHistogram(long cameraId) throws Exception {
+		Session session = sessionFactory.openSession();
+		List<Object[]> byDayOfTheWeekDetectedObjectsHistogram = this.getByDayOfTheWeekDetectedObjectsHistogram(cameraId);
+		List<Object[]> historicalDayOfTheWeekQuantity;
+		StringBuilder hql = new StringBuilder("SELECT days, count(*) as Cant from (SELECT dayofweek(d.date) AS days ,COUNT(*) AS CANT FROM detected_object AS d WHERE camera_id = :camera_id group by year(d.date), month(d.date),day(d.date)) as subSet group by days");
+
+		historicalDayOfTheWeekQuantity = session.createSQLQuery(hql.toString())
+				.setParameter("camera_id", cameraId)
+				.list();
+
+		session.close();
+		List<Object[]> ByDayOfTheWeekDetectedObjectsAverageHistogram = Utils.calculateAverage(byDayOfTheWeekDetectedObjectsHistogram, historicalDayOfTheWeekQuantity);
+
+		return ByDayOfTheWeekDetectedObjectsAverageHistogram;
+	}
+
+	@Override
+	public List<Object[]> getByMonthOfTheYearDetectedObjectsAverageHistogram(long cameraId) throws Exception {
+		Session session = sessionFactory.openSession();
+		List<Object[]> ByMonthOfTheYearDetectedObjectsHistogram = this.getByMonthOfTheYearDetectedObjectsHistogram(cameraId);
+		List<Object[]> historicalMonthQuantity;
+		StringBuilder hql = new StringBuilder("SELECT months, count(*) as Cant from (SELECT MONTH(d.date) AS months, year(d.date) AS years FROM detected_object AS d WHERE camera_id = :camera_id group by years,months) as subSet group by months ");
+
+		historicalMonthQuantity = session.createSQLQuery(hql.toString())
+				.setParameter("camera_id", cameraId)
+				.list();
+
+		session.close();
+		List<Object[]> ByMonthOfTheYearDetectedObjectsAverageHistogram = Utils.calculateAverage(ByMonthOfTheYearDetectedObjectsHistogram, historicalMonthQuantity);
+
+		return ByMonthOfTheYearDetectedObjectsAverageHistogram;
 	}
 
 }

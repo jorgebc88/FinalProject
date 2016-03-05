@@ -34,12 +34,18 @@ public interface DetectedObjectDao {
 
 //------------------------------------------ Stats sorted by maximum values by camera ------------------------------------------
 
-	List<DetectedObject> getPeakHoursByDaysOfTheWeekAndCamera(long cameraId) throws Exception;
+	List<Object[]> getPeakHoursByDaysOfTheWeekAndCamera(long cameraId) throws Exception;
 
-	List<DetectedObject> getByHoursOfDayDetectedObjectsHistogram(int dayOfTheWeek, long camera_id) throws Exception;
+	List<Object[]> getByHoursOfDayDetectedObjectsHistogram(int dayOfTheWeek, long camera_id) throws Exception;
 
-	List<DetectedObject> getByDayOfTheWeekDetectedObjectsHistogram(long cameraId) throws Exception;
+	List<Object[]> getByDayOfTheWeekDetectedObjectsHistogram(long cameraId) throws Exception;
 
-	List<DetectedObject> getByMonthOfTheYearDetectedObjectsHistogram(long cameraId) throws Exception;
+	List<Object[]> getByMonthOfTheYearDetectedObjectsHistogram(long cameraId) throws Exception;
+
+	List<Object[]> getByHoursOfDayDetectedObjectsAverageHistogram(int dayOfTheWeek, long camera_id) throws Exception;
+
+	List<Object[]> getByDayOfTheWeekDetectedObjectsAverageHistogram(long cameraId) throws Exception;
+
+	List<Object[]> getByMonthOfTheYearDetectedObjectsAverageHistogram(long cameraId) throws Exception;
 
 }

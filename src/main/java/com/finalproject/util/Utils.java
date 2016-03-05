@@ -8,6 +8,8 @@ import com.finalproject.model.UserSession;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
@@ -57,6 +59,35 @@ public class Utils {
 		if (listOfObjects.isEmpty()) {
 			throw new RuntimeException("No elements were found!");
 		}
+	}
+	public static List<Object[]> calculateAverage(List<Object[]> trafficFlowByCriteriaList, List<Object[]> searchCriteriaQuantityList) {
+		List<Object[]> resultList = new ArrayList<>();
+		Object[] result;// = new Object[2];
+		for (Object[] trafficFlowByCriteria : trafficFlowByCriteriaList){
+			result = new Object[2];
+			result[0] = trafficFlowByCriteria[0];
+			for (Object[] searchCriteriaQuantity : searchCriteriaQuantityList){
+				if(trafficFlowByCriteria[0].equals(searchCriteriaQuantity[0])){
+					result[1] = (((BigInteger)(trafficFlowByCriteria[1])).longValue() / (((BigInteger)searchCriteriaQuantity[1])).longValue());
+					break;
+				}
+			}
+			resultList.add(result);
+		}
+		return resultList;
+	}
+
+	public static List<Object[]> calculateAverage(List<Object[]> trafficFlowByCriteriaList, Object[] searchCriteriaQuantity) {
+		List<Object[]> resultList = new ArrayList<>();
+		Object[] result;// = new Object[2];
+		for (Object[] trafficFlowByCriteria : trafficFlowByCriteriaList){
+			result = new Object[2];
+			result[0] = trafficFlowByCriteria[0];
+			double average = (((Long) trafficFlowByCriteria[1]).longValue()) / (((BigInteger)searchCriteriaQuantity[1]).longValue());
+			result[1] = average;
+			resultList.add(result);
+		}
+		return resultList;
 	}
 
 
